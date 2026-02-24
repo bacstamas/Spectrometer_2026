@@ -92,7 +92,7 @@ The goal is to design a low-cost spectrometer system and analyze its performance
 
 ## 📧 Contact
 Bács Tamás  
+tamas.bacs@stud.ubbcluj.ro  
 Computational Physics MSc Student  
 Babeș-Bolyai University
-```
 

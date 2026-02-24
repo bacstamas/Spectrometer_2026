@@ -1,0 +1,18 @@
+# FreeCAD backup and temp files
+*.FCStd1
+*.bak
+*.tmp
+
+# STL exports (optional – remove this if you WANT to upload STL)
+3DModels/STL/*
+
+# Python / Java / Arduino junk
+__pycache__/
+*.class
+*.o
+*.obj
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db

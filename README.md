@@ -50,7 +50,23 @@ The following circuit is used to drive the illumination source and interface the
 
 ![Spectrometer Circuit Diagram](/Docs/circuit_image.svg)
 
+### Arduino Uno to AS7265x (I2C)
 
+| Arduino Uno Pin | AS7265x Pin | Description |
+|-----------------|-------------|-------------|
+| 5V              | VIN / 5V     | Sensor power supply |
+| GND             | GND          | Common ground |
+| A4              | SDA          | I2C data line |
+| A5              | SCL          | I2C clock line |
+
+### Arduino Uno to BD139 Transistor (Light Bulb Driver)
+
+| Arduino Uno Pin | Component | Description |
+|-----------------|-----------|-------------|
+| D3 (PWM)         | BD139 Base | Controls light intensity using PWM |
+| 5V               | BD139 Collector | Light source supply |
+| Light bulb +  | BD139 Emitter | Current flows through bulb |
+| Light bulb −    | GND         | Common system ground |
 ---
 
 ## 🚀 How to Use

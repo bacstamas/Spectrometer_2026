@@ -1,0 +1,125 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+
+package "App" {
+    class Main {
+        + {static} main(args: String[])
+    }
+}
+
+package "GUI" {
+    class MainWindow <<JFrame>> {
+        - measurementListModel: DefaultListModel<String>
+        - measurementList: JList<String>
+        - spectrometer: Spectrometer
+        - measurementSets: Map<String, MeasurementSet>
+        - centerPanel: JPanel
+        - plotLabel: JLabel
+        + MainWindow()
+        - createMenuBar()
+        - createLeftPanel()
+        - createCenterPanel()
+        - addMeasurement(name: String)
+        - getSelectedMeasurement(): String
+        - deleteSelectedMeasurement()
+        - showDetails()
+    }
+
+    class ConfigureDialog <<JDialog>> {
+        - intField: JTextField
+        - avgField: JTextField
+        - countField: JTextField
+        - lightSpinner: JSpinner
+        - gainBox: JComboBox<Integer>
+        - modeBox: JComboBox<String>
+        - confirmed: boolean
+        + ConfigureDialog(parent: JFrame, currentParams: Map)
+        + isConfirmed(): boolean
+        + getParameters(): Map<String, Object>
+    }
+
+    class SpectrumOptionsDialog <<JDialog>> {
+        - barButton: JRadioButton
+        - curveButton: JRadioButton
+        - normalizeBox: JCheckBox
+        - errorBarsBox: JCheckBox
+        - confirmed: boolean
+        + SpectrumOptionsDialog(parent: JFrame)
+        + isConfirmed(): boolean
+        + getPlotType(): String
+        + isNormalize(): boolean
+        + isShowErrorBars(): boolean
+    }
+
+    class AbsorptionOptionsDialog <<JDialog>> {
+        - refBox: JComboBox<String>
+        - sampleBox: JComboBox<String>
+        - confirmed: boolean
+        + AbsorptionOptionsDialog(parent: JFrame, names: List<String>)
+        + isConfirmed(): boolean
+        + getReferenceName(): String
+        + getSampleName(): String
+    }
+}
+
+package "Core" {
+    class Spectrometer {
+        - port: SerialPort
+        - portName: String
+        - params: Map<String, Object>
+        - measurementSet: MeasurementSet
+        + Spectrometer()
+        + configure(int, gain, avg, mode, count, light)
+        + measure(name: String)
+        + getMeasurementSet(): MeasurementSet
+        + getPortName(): String
+        + close()
+        - findArduinoPort(): SerialPort
+    }
+
+    class Visualizer {
+        - measurementSet: MeasurementSet
+        - plotType: String
+        - normalize: boolean
+        - wavelengthsNm: double[]
+        + Visualizer(set: MeasurementSet)
+        + createBarChart(): CategoryChart
+        + createCurveChart(): XYChart
+        + createAbsorptionChart(ref, sample): XYChart
+        + savePlot(filename: String)
+    }
+}
+
+package "Data" {
+    class MeasurementSet {
+        - measurements: List<double[]>
+        - parameters: HashMap<String, Object>
+        - name: String
+        + addMeasurement(m: double[])
+        + getAverageAndStd(): StatisticsResult
+        + saveToFile(path: String)
+        + {static} loadFromFile(path: String): MeasurementSet
+    }
+
+    class StatisticsResult <<static inner>> {
+        + mean: double[]
+        + std: double[]
+    }
+}
+
+' Relationships
+Main ..> MainWindow : starts
+MainWindow *-- Spectrometer : manages
+MainWindow o-- MeasurementSet : holds multiple
+MainWindow ..> ConfigureDialog : uses
+MainWindow ..> SpectrumOptionsDialog : uses
+MainWindow ..> AbsorptionOptionsDialog : uses
+MainWindow ..> Visualizer : uses to plot
+
+Spectrometer *-- MeasurementSet : populates
+Visualizer o-- MeasurementSet : visualizes
+MeasurementSet +-- StatisticsResult : nested class
+
+@enduml

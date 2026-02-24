@@ -4,7 +4,7 @@
 *.tmp
 
 # STL exports (optional – remove this if you WANT to upload STL)
-3DModels/STL/*
+#3DModels/STL/*
 
 # Python / Java / Arduino junk
 __pycache__/

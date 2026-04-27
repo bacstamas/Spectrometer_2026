@@ -8,6 +8,10 @@ TEMP_DIR     = temp
 MAIN_JAR     = Main.jar
 MANIFEST     = manifest.txt
 
+MAIN_CLASS   = Main
+DIST_DIR     = dist
+APP_NAME     = SpectroMeter
+ICON_PATH     = ../Docs/spectro.png
 # Classpath for compilation (includes all jars in lib)
 # Note: Use ":" for Linux/macOS and ";" for Windows
 CP           = "$(LIB_DIR)/*"
@@ -19,7 +23,7 @@ SOURCES      = $(wildcard $(SRC_DIR)/*.java)
 
 .PHONY: all clean run compile unpack
 
-all: $(MAIN_JAR)
+all: $(MAIN_JAR) installer
 
 # 1. Compile the Java source files
 compile:
@@ -39,12 +43,27 @@ $(MAIN_JAR): compile unpack
 	$(JAR) cfm $(MAIN_JAR) $(MANIFEST) -C $(BIN_DIR) . -C $(TEMP_DIR) .
 	@echo "Build successful: $(MAIN_JAR)"
 
+# 4. Create an installer
+installer: $(MAIN_JAR)
+	@mkdir -p $(DIST_DIR)
+	@cp $(MAIN_JAR) $(DIST_DIR)/
+	@cp -r $(LIB_DIR) $(DIST_DIR)/
+	@jpackage \
+		--name $(APP_NAME)\
+		--input $(DIST_DIR)\
+		--main-jar $(MAIN_JAR)\
+		--main-class $(MAIN_CLASS)\
+		--type deb\
+		--dest $(DIST_DIR)/installer \
+	  	--java-options "-Djava.awt.headless=false"\
+	  	--icon $(ICON_PATH)
+
 # Clean build artifacts
 clean:
 	@echo "Cleaning..."
-	rm -rf $(BIN_DIR) $(TEMP_DIR) $(MAIN_JAR)
+	rm -rf $(BIN_DIR) $(TEMP_DIR) $(MAIN_JAR) $(DIST_DIR)
 
 # Build and run the project
-run: all
+run: $(MAIN_JAR)
 	@echo "Running project..."
 	java -jar $(MAIN_JAR)

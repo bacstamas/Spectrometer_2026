@@ -16,6 +16,7 @@ __pycache__/
 *.o
 *.obj
 *.log
+*.todo
 
 # OS junk
 .DS_Store

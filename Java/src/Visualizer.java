@@ -1,382 +1,261 @@
 import org.knowm.xchart.*;
-
-import java.io.IOException;
+import org.knowm.xchart.style.Styler;
 import java.util.*;
 
+/**
+ * Handles visualization of spectrometer data.
+ * Supports bar and curve plots with optional error bars and normalization.
+ */
 public class Visualizer {
 
     private MeasurementSet measurementSet;
-
-    private String plotType = "curve";      // "curve" or "bar"
+    
+    // Plot configuration
+    private PlotType plotType = PlotType.CURVE;
     private boolean normalize = false;
     private boolean showErrorBars = true;
-
-    /* ===== X-AXIS MODE ===== */
-    private boolean useWavelength = true;
-
-    // Wavelengths for AS7262 visible channels
+    private AxisType axisType = AxisType.WAVELENGTH;
+    
+    // Physical constants and data
+    private static final double SPEED_OF_LIGHT = 299792458.0; // m/s
+    
+    // AS7262 visible channel wavelengths (nm)
     private double[] wavelengthsNm = {450, 500, 550, 570, 600, 650};
-
-    // Optional: compute corresponding frequencies (THz)
-    private double[] frequenciesTHz = {
-            299792458.0 / (450e-9) / 1e12, // ≈ 666.2 THz
-            299792458.0 / (500e-9) / 1e12, // ≈ 599.6 THz
-            299792458.0 / (550e-9) / 1e12, // ≈ 545.1 THz
-            299792458.0 / (570e-9) / 1e12, // ≈ 526.0 THz
-            299792458.0 / (600e-9) / 1e12, // ≈ 499.7 THz
-            299792458.0 / (650e-9) / 1e12  // ≈ 461.2 THz
-    };
-
-
+    
+    // Pre-calculated frequencies (THz)
+    private double[] frequenciesTHz;
+    
+    // Channel labels
+    private static final String[] CHANNEL_LABELS = {"V", "B", "G", "Y", "O", "R"};
+    
+    public enum PlotType { BAR, CURVE }
+    public enum AxisType { WAVELENGTH, FREQUENCY }
+    
     public Visualizer(MeasurementSet measurementSet) {
         this.measurementSet = measurementSet;
+        calculateFrequencies();
+    }
+    
+    /**
+     * Calculate frequencies from wavelengths
+     */
+    private void calculateFrequencies() {
+        frequenciesTHz = new double[wavelengthsNm.length];
+        for (int i = 0; i < wavelengthsNm.length; i++) {
+            // Convert nm to m, calculate frequency in THz
+            double wavelengthM = wavelengthsNm[i] * 1e-9;
+            frequenciesTHz[i] = SPEED_OF_LIGHT / wavelengthM / 1e12;
+        }
     }
 
-    /* ===================== CONFIG ===================== */
+    // ==================== CONFIGURATION ====================
 
+    public void setPlotType(PlotType plotType) { this.plotType = plotType; }
     public void setPlotType(String plotType) {
-        this.plotType = plotType.toLowerCase();
+        this.plotType = plotType.equalsIgnoreCase("bar") ? PlotType.BAR : PlotType.CURVE;
     }
-
-    public void setNormalize(boolean normalize) {
-        this.normalize = normalize;
-    }
-
-    public void setShowErrorBars(boolean showErrorBars) {
-        this.showErrorBars = showErrorBars;
-    }
-
+    
+    public void setNormalize(boolean normalize) { this.normalize = normalize; }
+    public void setShowErrorBars(boolean showErrorBars) { this.showErrorBars = showErrorBars; }
+    public void setAxisType(AxisType axisType) { this.axisType = axisType; }
     public void useWavelengthAxis(boolean useWavelength) {
-        this.useWavelength = useWavelength;
+        this.axisType = useWavelength ? AxisType.WAVELENGTH : AxisType.FREQUENCY;
     }
 
-    public void setWavelengths(double[] wavelengthsNm) {
-        this.wavelengthsNm = wavelengthsNm;
-    }
+    // ==================== CHART CREATION ====================
 
-    public void setFrequencies(double[] frequenciesTHz) {
-        this.frequenciesTHz = frequenciesTHz;
-    }
-
-    /* ===================== PUBLIC ===================== */
-
-    public void savePlot(String filename) throws IOException {
-        if (plotType.equals("bar")) {
-            saveBarPlot(filename);
-        } else {
-            saveCurvePlot(filename);
-        }
-    }
-
-    /* ===================== BAR PLOT ===================== */
-
-    private void saveBarPlot(String filename) throws IOException {
-
-        MeasurementSet.StatisticsResult stats =
-                measurementSet.getAverageAndStd();
-
-        double[] mean = stats.mean;
-        double[] std = stats.std;
-
-        List<String> xLabels = new ArrayList<>();
-        double[] axisValues = useWavelength ? wavelengthsNm : frequenciesTHz;
-        String xLabel = useWavelength ? "Wavelength (nm)" : "Frequency (THz)";
-
-        for (double v : axisValues) {
-            xLabels.add(String.valueOf(v));
-        }
-
-        List<Double> y;
-        List<Double> e;
-
-        if (normalize) {
-            NormalizedData data = normalize(mean, std);
-            y = data.y;
-            e = data.e;
-        } else {
-            y = toList(mean);
-            e = toList(std);
-        }
-
-        CategoryChart chart = new CategoryChartBuilder()
-                .width(800)
-                .height(600)
-                .title("Spectrum")
-                .xAxisTitle(xLabel)
-                .yAxisTitle(getYLabel())
-                .build();
-
-        if (showErrorBars) {
-            chart.addSeries("Intensity", xLabels, y, e);
-        } else {
-            chart.addSeries("Intensity", xLabels, y);
-        }
-
-        BitmapEncoder.saveBitmap(chart, filename,
-                BitmapEncoder.BitmapFormat.PNG);
-    }
-
-    /* ===================== CURVE PLOT ===================== */
-
-    private void saveCurvePlot(String filename) throws IOException {
-
-        MeasurementSet.StatisticsResult stats =
-                measurementSet.getAverageAndStd();
-
-        double[] mean = stats.mean;
-        double[] std = stats.std;
-
-        double[] axisValues = useWavelength ? wavelengthsNm : frequenciesTHz;
-        String xLabel = useWavelength ? "Wavelength (nm)" : "Frequency (THz)";
-
-        List<Double> x = toList(axisValues);
-
-        List<Double> y;
-        List<Double> e;
-
-        if (normalize) {
-            NormalizedData data = normalize(mean, std);
-            y = data.y;
-            e = data.e;
-        } else {
-            y = toList(mean);
-            e = toList(std);
-        }
-
-        XYChart chart = new XYChartBuilder()
-                .width(800)
-                .height(600)
-                .title("Spectrum")
-                .xAxisTitle(xLabel)
-                .yAxisTitle(getYLabel())
-                .build();
-
-        if (showErrorBars) {
-            chart.addSeries("Intensity", x, y, e);
-        } else {
-            chart.addSeries("Intensity", x, y);
-        }
-
-        BitmapEncoder.saveBitmap(chart, filename,
-                BitmapEncoder.BitmapFormat.PNG);
-    }
-
-    /* ===================== CREATE BAR CHART ===================== */
-
+    /**
+     * Create bar chart for current measurement set
+     */
     public CategoryChart createBarChart() {
-        MeasurementSet.StatisticsResult stats =
-                measurementSet.getAverageAndStd();
-        double[] mean = stats.mean;
-        double[] std = stats.std;
-
-        // X axis labels
-        List<String> xLabels = new ArrayList<>();
-        double[] axisValues = useWavelength ? wavelengthsNm : frequenciesTHz;
-        String xLabel = useWavelength ? "Wavelength (nm)" : "Frequency (THz)";
-
-        if (useWavelength) {
-            for (double v : axisValues) {
-                xLabels.add(String.valueOf((int) v));       // 450, 500, ...
-            }
-        } else {
-            for (double v : axisValues) {
-                xLabels.add(String.format("%.2f", v));      // 2 decimals
-            }
-        }
-
-        // Y values
-        List<Double> y;
-        List<Double> e;
-        if (normalize) {
-            NormalizedData data = normalize(mean, std);
-            y = data.y;
-            e = data.e;
-        } else {
-            y = toList(mean);
-            e = toList(std);
-        }
-
-        // If plotting frequencies, reverse axis and data so lowest freq is left
-        if (!useWavelength) {
-            java.util.Collections.reverse(xLabels);
-            java.util.Collections.reverse(y);
-            java.util.Collections.reverse(e);
-        }
-
+        MeasurementSet.StatisticsResult stats = measurementSet.getAverageAndStd();
+        
+        // Prepare data
+        PlotData data = preparePlotData(stats.mean, stats.std);
+        
+        // Create chart
         CategoryChart chart = new CategoryChartBuilder()
-            .width(800)
-            .height(600)
-            .title("Spectrum")
-            .xAxisTitle(xLabel)
-            .yAxisTitle(getYLabel())
+            .width(800).height(600)
+            .title("Spectrum - " + measurementSet.getName())
+            .xAxisTitle(getAxisTitle())
+            .yAxisTitle(getYAxisTitle())
             .build();
-
+        
+        // Style
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setAvailableSpaceFill(0.5);
+        
+        // Add series
         if (showErrorBars) {
-            chart.addSeries("Intensity", xLabels, y, e);
+            chart.addSeries("Intensity", data.labels, data.yValues, data.errorValues);
         } else {
-            chart.addSeries("Intensity", xLabels, y);
+            chart.addSeries("Intensity", data.labels, data.yValues);
         }
-
+        
         return chart;
     }
 
-    /* ===================== CREATE CURVE CHART ===================== */
-
+    /**
+     * Create curve chart for current measurement set
+     */
     public XYChart createCurveChart() {
-        MeasurementSet.StatisticsResult stats =
-                measurementSet.getAverageAndStd();
-        double[] mean = stats.mean;
-        double[] std = stats.std;
-
-        double[] axisValues = useWavelength ? wavelengthsNm : frequenciesTHz;
-        String xLabel = useWavelength ? "Wavelength (nm)" : "Frequency (THz)";
-
-        List<Double> x = toList(axisValues);
-        List<Double> y;
-        List<Double> e;
-        if (normalize) {
-            NormalizedData data = normalize(mean, std);
-            y = data.y;
-            e = data.e;
-        } else {
-            y = toList(mean);
-            e = toList(std);
-        }
-
+        MeasurementSet.StatisticsResult stats = measurementSet.getAverageAndStd();
+        
+        // Prepare data
+        PlotData data = preparePlotData(stats.mean, stats.std);
+        
+        // Create chart
         XYChart chart = new XYChartBuilder()
-                .width(800)
-                .height(600)
-                .title("Spectrum")
-                .xAxisTitle(xLabel)
-                .yAxisTitle(getYLabel())
-                .build();
-
+            .width(800).height(600)
+            .title("Spectrum - " + measurementSet.getName())
+            .xAxisTitle(getAxisTitle())
+            .yAxisTitle(getYAxisTitle())
+            .build();
+        
+        // Style
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setMarkerSize(6);
+        
+        // Add series
         if (showErrorBars) {
-            chart.addSeries("Intensity", x, y, e);
+            chart.addSeries("Intensity", data.xValues, data.yValues, data.errorValues);
         } else {
-            chart.addSeries("Intensity", x, y);
+            chart.addSeries("Intensity", data.xValues, data.yValues);
         }
-
+        
         return chart;
     }
 
-    /* ===================== ABSORPTION PLOT ===================== */
-    public void saveAbsorptionPlot(MeasurementSet set0,
-                               MeasurementSet set1,
-                               String filename) throws IOException {
-
-        MeasurementSet.StatisticsResult s0 = set0.getAverageAndStd();
-        MeasurementSet.StatisticsResult s1 = set1.getAverageAndStd();
-
-        double[] a0 = s0.mean;
-        double[] a1 = s1.mean;
-
-        int n = Math.min(a0.length, a1.length);
-
-        double[] absorbance = new double[n];
-
-        for (int i = 0; i < n; i++) {
-            if (a0[i] > 0 && a1[i] > 0) {
-                absorbance[i] = -Math.log10(a1[i] / a0[i]);
-            } else {
-                absorbance[i] = Double.NaN; // physically invalid
-            }
-        }
-
-        double[] axisValues = useWavelength ? wavelengthsNm : frequenciesTHz;
-        String xLabel = useWavelength ? "Wavelength (nm)" : "Frequency (THz)";
-
-        List<Double> x = toList(axisValues);
-        List<Double> y = toList(absorbance);
-
+    /**
+     * Create absorption chart comparing reference and sample
+     */
+    public XYChart createAbsorptionChart(MeasurementSet reference, MeasurementSet sample) {
+        MeasurementSet.StatisticsResult refStats = reference.getAverageAndStd();
+        MeasurementSet.StatisticsResult sampleStats = sample.getAverageAndStd();
+        
+        // Calculate absorbance
+        double[] absorbance = calculateAbsorbance(refStats.mean, sampleStats.mean);
+        
+        // Get axis values
+        double[] axisValues = getAxisValues();
+        List<Double> xValues = toList(axisValues);
+        List<Double> yValues = toList(absorbance);
+        
+        // Create chart
         XYChart chart = new XYChartBuilder()
-                .width(800)
-                .height(600)
-                .title("Absorption Spectrum")
-                .xAxisTitle(xLabel)
-                .yAxisTitle("Absorbance")
-                .build();
-
-        chart.addSeries("Absorbance", x, y);
-
-        BitmapEncoder.saveBitmap(chart, filename,
-                BitmapEncoder.BitmapFormat.PNG);
+            .width(800).height(600)
+            .title("Absorption Spectrum")
+            .xAxisTitle(getAxisTitle())
+            .yAxisTitle("Absorbance")
+            .build();
+        
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.addSeries("Absorbance", xValues, yValues);
+        
+        return chart;
     }
 
-    /* ===================== CREATE ABSORPTION CHART ===================== */
+    // ==================== DATA PREPARATION ====================
 
-    public XYChart createAbsorptionChart(MeasurementSet set0, MeasurementSet set1) {
-        MeasurementSet.StatisticsResult s0 = set0.getAverageAndStd();
-        MeasurementSet.StatisticsResult s1 = set1.getAverageAndStd();
-        double[] a0 = s0.mean;
-        double[] a1 = s1.mean;
-
-        int n = Math.min(a0.length, a1.length);
+    /**
+     * Container for prepared plot data
+     */
+    private class PlotData {
+        List<String> labels;      // for bar charts
+        List<Double> xValues;      // for curve charts
+        List<Double> yValues;
+        List<Double> errorValues;
+    }
+    
+    /**
+     * Prepare data for plotting based on current settings
+     */
+    private PlotData preparePlotData(double[] mean, double[] std) {
+        PlotData data = new PlotData();
+        
+        // Get axis values
+        double[] axisValues = getAxisValues();
+        String[] axisLabels = getAxisLabels();
+        
+        // Apply normalization if requested
+        double[] yData = mean;
+        double[] errorData = std;
+        if (normalize) {
+            double max = Arrays.stream(mean).max().orElse(1.0);
+            yData = Arrays.stream(mean).map(v -> v / max).toArray();
+            errorData = Arrays.stream(std).map(v -> v / max).toArray();
+        }
+        
+        // Prepare data structures
+        data.xValues = toList(axisValues);
+        data.labels = Arrays.asList(axisLabels);
+        data.yValues = toList(yData);
+        data.errorValues = toList(errorData);
+        
+        // Reverse for frequency axis (so lower freq on left)
+        if (axisType == AxisType.FREQUENCY) {
+            Collections.reverse(data.xValues);
+            Collections.reverse(data.labels);
+            Collections.reverse(data.yValues);
+            Collections.reverse(data.errorValues);
+        }
+        
+        return data;
+    }
+    
+    /**
+     * Calculate absorbance A = -log10(I/I0)
+     */
+    private double[] calculateAbsorbance(double[] reference, double[] sample) {
+        int n = Math.min(reference.length, sample.length);
         double[] absorbance = new double[n];
+        
         for (int i = 0; i < n; i++) {
-            if (a0[i] > 0 && a1[i] > 0) {
-                absorbance[i] = -Math.log10(a1[i] / a0[i]);
+            if (reference[i] > 0 && sample[i] > 0) {
+                absorbance[i] = -Math.log10(sample[i] / reference[i]);
             } else {
                 absorbance[i] = Double.NaN;
             }
         }
-
-        double[] axisValues = useWavelength ? wavelengthsNm : frequenciesTHz;
-        String xLabel = useWavelength ? "Wavelength (nm)" : "Frequency (THz)";
-
-        List<Double> x = toList(axisValues);
-        List<Double> y = toList(absorbance);
-
-        XYChart chart = new XYChartBuilder()
-                .width(800)
-                .height(600)
-                .title("Absorption Spectrum")
-                .xAxisTitle(xLabel)
-                .yAxisTitle("Absorbance")
-                .build();
-
-        chart.addSeries("Absorbance", x, y);
-        return chart;
+        
+        return absorbance;
     }
 
-    /* ===================== HELPERS ===================== */
+    // ==================== UTILITY METHODS ====================
 
-    private String getYLabel() {
+    private double[] getAxisValues() {
+        return axisType == AxisType.WAVELENGTH ? wavelengthsNm : frequenciesTHz;
+    }
+    
+    private String[] getAxisLabels() {
+        String[] labels = new String[wavelengthsNm.length];
+        if (axisType == AxisType.WAVELENGTH) {
+            for (int i = 0; i < wavelengthsNm.length; i++) {
+                labels[i] = String.valueOf((int) wavelengthsNm[i]);
+            }
+        } else {
+            for (int i = 0; i < frequenciesTHz.length; i++) {
+                labels[i] = String.format("%.1f", frequenciesTHz[i]);
+            }
+        }
+        return labels;
+    }
+    
+    private String getAxisTitle() {
+        return axisType == AxisType.WAVELENGTH ? "Wavelength (nm)" : "Frequency (THz)";
+    }
+    
+    private String getYAxisTitle() {
         Map<String, Object> params = measurementSet.getParameters();
         Object mode = params.get("mode");
-
-        if (mode != null && mode.toString().equalsIgnoreCase("cal")) {
-            return "Calibrated Intensity";
-        }
-        return "Raw Counts";
+        String base = (mode != null && mode.toString().equalsIgnoreCase("cal")) 
+            ? "Calibrated Intensity" : "Raw Counts";
+        return normalize ? base + " (normalized)" : base;
     }
-
+    
     private List<Double> toList(double[] arr) {
         List<Double> list = new ArrayList<>();
         for (double v : arr) list.add(v);
         return list;
-    }
-
-    /* ======== NORMALIZATION ======== */
-
-    private static class NormalizedData {
-        List<Double> y;
-        List<Double> e;
-    }
-
-    private NormalizedData normalize(double[] mean, double[] std) {
-
-        double max = Arrays.stream(mean).max().orElse(1.0);
-
-        NormalizedData data = new NormalizedData();
-        data.y = new ArrayList<>();
-        data.e = new ArrayList<>();
-
-        for (int i = 0; i < mean.length; i++) {
-            data.y.add(mean[i] / max);
-            data.e.add(std[i] / max);
-        }
-
-        return data;
     }
 }

@@ -4,114 +4,110 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Main controller class for spectrometer hardware communication.
+ * Handles serial port connection, configuration, and data acquisition.
+ */
 public class Spectrometer {
 
+    // Serial communication
     private SerialPort port;
     private String portName;
-
-    private int integrationTime = 50;
-    private int gain = 16;
-    private int avg = 1;
-    private String mode = "cal";
-    private int numberOfMeasurements = 1;
-    private int lightInt = 50;
-
+    
+    // Measurement parameters with defaults
+    private int integrationTime = 50;      // ms
+    private int gain = 16;                  // 1, 4, 16, 64
+    private int avg = 1;                     // number of samples to average
+    private String mode = "cal";             // "raw" or "cal"
+    private int numberOfMeasurements = 1;    // number of spectra to record
+    private int lightInt = 50;                // LED intensity (0-100)
+    
+    // Data storage
     private MeasurementSet measurementSet = new MeasurementSet();
     private Map<String, Object> params = new HashMap<>();
 
-    // ---------- CONSTRUCTOR ----------
+    /**
+     * Constructor - establishes connection with Arduino/spectrometer
+     * @throws Exception if connection fails
+     */
     public Spectrometer() throws Exception {
-
         try {
-            System.out.println("=== SPECTROMETER DEBUG 1: START ===");
+            System.out.println("Initializing spectrometer connection...");
             
-            System.out.println("Step 1: Finding ports...");
-            SerialPort[] ports = SerialPort.getCommPorts();
-            System.out.println("PORTS LENGTH: " + ports.length);
-            
-            if (ports.length == 0) {
-                System.out.println("NO PORTS FOUND - jSerialComm failed");
-                throw new Exception("No serial ports detected");
-            }
-            
-            for (int i = 0; i < ports.length; i++) {
-                System.out.println("Port " + i + ": " + 
-                    ports[i].getSystemPortName() + 
-                    " | " + ports[i].getDescriptivePortName());
-            }
-            
-            System.out.println("Step 2: Calling findArduinoPort...");
-
-            // 1. Find Arduino port
+            // Find and configure Arduino port
             port = findArduinoPort();
             if (port == null) {
-                System.out.println("findArduinoPort returned NULL");
-                throw new Exception("Arduino not found");
+                throw new Exception("Arduino not found - check USB connection");
             }
-            System.out.println("Arduino found: " + port.getSystemPortName());
-
-            // 2. Configure serial port
-            port.setBaudRate(115200);
-            port.setNumDataBits(8);
-            port.setNumStopBits(SerialPort.ONE_STOP_BIT);
-            port.setParity(SerialPort.NO_PARITY);
-
-            // IMPORTANT: non-blocking mode (no read timeouts)
-            port.setComPortTimeouts(
-                SerialPort.TIMEOUT_READ_SEMI_BLOCKING | SerialPort.TIMEOUT_WRITE_BLOCKING,
-                5000,  // read timeout
-                5000   // write timeout
-            );
-
-            // 3. Open port
-            if (!port.openPort()) {
-                throw new Exception("Failed to open serial port");
-            }
-
-            // 4. Wait for Arduino auto-reset to finish
-            Thread.sleep(2000);
-
-            // 5. Flush any startup garbage (e.g. READY, boot noise)
-            InputStream in = port.getInputStream();
-            byte[] flushBuffer = new byte[256];
-            while (port.bytesAvailable() > 0) {
-                in.read(flushBuffer, 0, Math.min(flushBuffer.length, port.bytesAvailable()));
-                Thread.sleep(10);
-            }
-
-            System.out.println("Connected to " + port.getSystemPortName());
-            portName=port.getSystemPortName();
-
+            
+            configureSerialPort();
+            initializeConnection();
+            
+            // Store port name for display
+            portName = port.getSystemPortName();
+            
             // Initialize parameter map with defaults
-            params.put("integrationTime", integrationTime);
-            params.put("gain", gain);
-            params.put("avg", avg);
-            params.put("mode", mode);
-            params.put("numberOfMeasurements", numberOfMeasurements);
-            params.put("lightInt", lightInt);
+            initializeParameters();
+            
+            System.out.println("Successfully connected to " + portName);
+            
         } catch (Exception e) {
-            System.out.println("=== SPECTROMETER EXCEPTION: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Connection failed: " + e.getMessage());
             throw e;
         }
     }
-
-
-    // ---------- CONFIGURATION ----------
-    public void configure(int integrationTime,
-                          int gain,
-                          int avg,
-                          String mode,
-                          int numberOfMeasurements,
-                          int lightInt) {
-
+    
+    /**
+     * Configure serial port parameters
+     */
+    private void configureSerialPort() {
+        port.setBaudRate(115200);
+        port.setNumDataBits(8);
+        port.setNumStopBits(SerialPort.ONE_STOP_BIT);
+        port.setParity(SerialPort.NO_PARITY);
+        
+        // Set timeouts: non-blocking read with 5s timeout
+        port.setComPortTimeouts(
+            SerialPort.TIMEOUT_READ_SEMI_BLOCKING | SerialPort.TIMEOUT_WRITE_BLOCKING,
+            5000,  // read timeout
+            5000   // write timeout
+        );
+    }
+    
+    /**
+     * Open port and flush startup messages
+     */
+    private void initializeConnection() throws Exception {
+        if (!port.openPort()) {
+            throw new Exception("Failed to open serial port");
+        }
+        
+        // Wait for Arduino auto-reset
+        Thread.sleep(2000);
+        
+        // Flush any startup garbage
+        InputStream in = port.getInputStream();
+        byte[] flushBuffer = new byte[256];
+        while (port.bytesAvailable() > 0) {
+            in.read(flushBuffer, 0, 
+                Math.min(flushBuffer.length, port.bytesAvailable()));
+            Thread.sleep(10);
+        }
+    }
+    
+    /**
+     * Configure measurement parameters
+     */
+    public void configure(int integrationTime, int gain, int avg, 
+                         String mode, int numberOfMeasurements, int lightInt) {
         this.integrationTime = integrationTime;
         this.gain = gain;
         this.avg = avg;
         this.mode = mode;
         this.numberOfMeasurements = numberOfMeasurements;
         this.lightInt = lightInt;
-
+        
+        // Update parameter map with consistent keys
         params.put("integrationTime", integrationTime);
         params.put("gain", gain);
         params.put("avg", avg);
@@ -120,86 +116,117 @@ public class Spectrometer {
         params.put("lightInt", lightInt);
     }
 
+    /**
+     * Initialize parameter map with current values
+     */
+    private void initializeParameters() {
+        params.put("integrationTime", integrationTime);
+        params.put("gain", gain);
+        params.put("avg", avg);
+        params.put("mode", mode);
+        params.put("numberOfMeasurements", numberOfMeasurements);
+        params.put("lightInt", lightInt);
+    }
 
-    // ---------- MEASUREMENT ----------
+    /**
+     * Perform measurement with current configuration
+     * @param baseName base name for the measurement set
+     */
     public void measure(String baseName) throws Exception {
-
-        DateTimeFormatter fmt =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
+        // Create timestamped name
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         String timestamp = LocalDateTime.now().format(fmt);
         String fullName = baseName + "_" + timestamp;
-
+        
+        // Prepare measurement set
         measurementSet = new MeasurementSet();
         measurementSet.setParameters(params);
         measurementSet.setName(fullName);
-
+        
         OutputStream out = port.getOutputStream();
         InputStream in = port.getInputStream();
-
+        
         byte[] buffer = new byte[1024];
         StringBuilder lineBuffer = new StringBuilder();
-
+        
         for (int i = 0; i < numberOfMeasurements; i++) {
-
+            // Send command to Arduino
             String command = String.format(
                 "read int=%d gain=%d avg=%d mode=%s light=%d\n",
                 integrationTime, gain, avg, mode, lightInt
             );
-
             out.write(command.getBytes());
             out.flush();
-
+            
+            // Calculate appropriate timeout based on parameters
+            // Base time: integrationTime * avg (total measurement time)
+            // Add 2 seconds for communication and processing overhead
+            int totalMeasurementTimeMs = integrationTime * avg;
+            int timeoutMs = totalMeasurementTimeMs*12 + 2000; // Add 2 seconds buffer
+            timeoutMs = Math.max(5000, timeoutMs); // At least 5 seconds minimum
+            
+            System.out.println("Measurement " + (i+1) + "/" + numberOfMeasurements + 
+                              " - Timeout set to: " + timeoutMs + "ms");
+            
             long startTime = System.currentTimeMillis();
             boolean received = false;
-
-            while (System.currentTimeMillis() - startTime < 5000) {
-
+            
+            while (System.currentTimeMillis() - startTime < timeoutMs) {
                 int available = port.bytesAvailable();
                 if (available <= 0) {
-                    Thread.sleep(5);
+                    // Print progress for long measurements
+                    if (totalMeasurementTimeMs > 5000 && (System.currentTimeMillis() - startTime) % 1000 == 0) {
+                        System.out.print(".");
+                    }
+                    Thread.sleep(10);
                     continue;
                 }
-
+                
                 int n = in.read(buffer, 0, Math.min(buffer.length, available));
                 if (n <= 0) continue;
-
+                
+                // Parse incoming data
                 for (int j = 0; j < n; j++) {
                     char c = (char) buffer[j];
-
+                    
                     if (c == '\n') {
                         String line = lineBuffer.toString().trim();
                         lineBuffer.setLength(0);
-
+                        
                         if (!line.contains(",")) continue;
-
+                        
                         try {
                             double[] spectrum = parseCSV(line);
                             measurementSet.addMeasurement(spectrum);
                             received = true;
+                            System.out.println(" Received measurement " + (i+1));
                             break;
                         } catch (Exception ignored) {}
                     } else if (c != '\r') {
                         lineBuffer.append(c);
                     }
                 }
-
+                
                 if (received) break;
             }
-
+            
             if (!received) {
-                throw new Exception("Timeout waiting for measurement");
+                throw new Exception("Timeout waiting for measurement " + (i+1) + 
+                                  " after " + timeoutMs + "ms");
             }
         }
     }
 
-
+    /**
+     * Parse CSV line into double array
+     * Expects 6 values for AS726x sensor
+     */
     private double[] parseCSV(String line) throws Exception {
         String[] tokens = line.split(",");
         if (tokens.length != 6) {
-            throw new Exception("Invalid data");
+            throw new Exception("Invalid data format");
         }
-
+        
         double[] values = new double[6];
         for (int i = 0; i < 6; i++) {
             values[i] = Double.parseDouble(tokens[i]);
@@ -207,38 +234,35 @@ public class Spectrometer {
         return values;
     }
 
-    // ---------- ACCESS ----------
-    public MeasurementSet getMeasurementSet() {
-        return measurementSet;
-    }
-
-    public String getPortName() {
-        return portName;
-    }
-
-    public void close() {
-        if (port != null && port.isOpen()) {
-            port.closePort();
-        }
-    }
-
+    /**
+     * Find Arduino port by checking common identifiers
+     */
     private SerialPort findArduinoPort() {
         for (SerialPort p : SerialPort.getCommPorts()) {
-            String name = p.getDescriptivePortName().toLowerCase();
-            if (name.contains("arduino") ||
-                p.getSystemPortName().contains("ttyACM") ||
-                p.getSystemPortName().contains("usb")) {
+            String desc = p.getDescriptivePortName().toLowerCase();
+            String sysName = p.getSystemPortName().toLowerCase();
+            
+            if (desc.contains("arduino") || 
+                sysName.contains("ttyacm") || 
+                sysName.contains("usb") ||
+                sysName.contains("com") && desc.contains("serial")) {
                 return p;
             }
         }
-
-        // DEBUG: print ALL available ports
-        System.err.println("=== DEBUG: No Arduino found. Available ports ===");
-        for (SerialPort p : SerialPort.getCommPorts()) {
-            System.err.println("Port: " + p.getSystemPortName() + 
-                              " | Desc: " + p.getDescriptivePortName());
-        }
-        System.err.println("=== END DEBUG ===");
         return null;
+    }
+
+    // Getters
+    public MeasurementSet getMeasurementSet() { return measurementSet; }
+    public String getPortName() { return portName; }
+    
+    /**
+     * Close serial port connection
+     */
+    public void close() {
+        if (port != null && port.isOpen()) {
+            port.closePort();
+            System.out.println("Serial port closed");
+        }
     }
 }

@@ -1,3 +1,5 @@
+package core;
+
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.*;
 import java.util.*;

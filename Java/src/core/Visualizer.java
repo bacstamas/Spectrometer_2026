@@ -1,3 +1,5 @@
+package core;
+
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.Styler;
 import java.util.*;

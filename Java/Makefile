@@ -12,12 +12,13 @@ MAIN_CLASS   = Main
 DIST_DIR     = dist
 APP_NAME     = SpectroMeter
 ICON_PATH     = ../Docs/spectro.png
+
 # Classpath for compilation (includes all jars in lib)
 # Note: Use ":" for Linux/macOS and ";" for Windows
 CP           = "$(LIB_DIR)/*"
 
 # Find all .java files in the src directory
-SOURCES      = $(wildcard $(SRC_DIR)/*.java)
+SOURCES = $(shell find $(SRC_DIR) -name "*.java")
 
 # --- Targets ---
 

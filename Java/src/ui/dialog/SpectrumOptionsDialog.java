@@ -1,17 +1,20 @@
+package ui.dialog;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
- * Dialog for configuring absorption plot options.
- * Allows selection of reference and sample measurements and axis type.
+ * Dialog for configuring spectrum plot options.
+ * Allows selection of plot type, normalization, error bars, and axis type.
  */
-public class AbsorptionOptionsDialog extends JDialog {
+public class SpectrumOptionsDialog extends JDialog {
 
     // ==================== UI COMPONENTS ====================
     
-    private JComboBox<String> referenceBox;
-    private JComboBox<String> sampleBox;
+    private JRadioButton barButton;
+    private JRadioButton curveButton;
+    private JCheckBox normalizeBox;
+    private JCheckBox errorBarsBox;
     private JRadioButton wavelengthButton;
     private JRadioButton frequencyButton;
     
@@ -21,26 +24,22 @@ public class AbsorptionOptionsDialog extends JDialog {
     
     // ==================== CONSTANTS ====================
     
-    private static final int DIALOG_WIDTH = 350;
-    private static final int DIALOG_HEIGHT = 350;
+    private static final int DIALOG_WIDTH = 300;
+    private static final int DIALOG_HEIGHT = 300;
     private static final int PADDING = 8;
-    private static final int GRID_ROWS = 3;
+    private static final int GRID_ROWS = 4;
     private static final int GRID_COLS = 1;
-    private static final int GRID_GAP = 4;
 
     /**
-     * Constructs the absorption options dialog.
+     * Constructs the spectrum options dialog.
      * @param parent Parent frame
-     * @param measurementNames List of available measurement names
      */
-    public AbsorptionOptionsDialog(JFrame parent, List<String> measurementNames) {
-        super(parent, "Absorption Options", true);
+    public SpectrumOptionsDialog(JFrame parent) {
+        super(parent, "Spectrum Options", true);
         initializeDialog();
         
-        String[] names = measurementNames.toArray(new String[0]);
-        
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(createOptionsPanel(names), BorderLayout.CENTER);
+        mainPanel.add(createOptionsPanel(), BorderLayout.CENTER);
         mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
         
         add(mainPanel);
@@ -59,49 +58,62 @@ public class AbsorptionOptionsDialog extends JDialog {
     // ==================== PANEL CREATION ====================
 
     /**
-     * Creates the main options panel.
+     * Creates the panel with all plot options.
      */
-    private JPanel createOptionsPanel(String[] measurementNames) {
-        JPanel panel = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, GRID_GAP, GRID_GAP));
+    private JPanel createOptionsPanel() {
+        JPanel panel = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, 4, 4));
         panel.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
-        panel.add(createReferencePanel(measurementNames));
-        panel.add(createSamplePanel(measurementNames));
+        panel.add(createPlotTypePanel());
+        panel.add(createNormalizePanel());
+        panel.add(createErrorBarsPanel());
         panel.add(createAxisPanel());
 
         return panel;
     }
 
     /**
-     * Creates panel for reference selection.
+     * Creates panel for plot type selection (bar/curve).
      */
-    private JPanel createReferencePanel(String[] measurementNames) {
+    private JPanel createPlotTypePanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBorder(BorderFactory.createTitledBorder("Reference"));
+        panel.setBorder(BorderFactory.createTitledBorder("Plot Type"));
         
-        referenceBox = new JComboBox<>(measurementNames);
-        panel.add(new JLabel("Reference:"));
-        panel.add(referenceBox);
+        barButton = new JRadioButton("Bar");
+        curveButton = new JRadioButton("Curve", true);
+        
+        ButtonGroup group = new ButtonGroup();
+        group.add(barButton);
+        group.add(curveButton);
+        
+        panel.add(barButton);
+        panel.add(curveButton);
         
         return panel;
     }
 
     /**
-     * Creates panel for sample selection.
+     * Creates panel for normalization option.
      */
-    private JPanel createSamplePanel(String[] measurementNames) {
+    private JPanel createNormalizePanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBorder(BorderFactory.createTitledBorder("Sample"));
-        
-        sampleBox = new JComboBox<>(measurementNames);
-        panel.add(new JLabel("Sample:"));
-        panel.add(sampleBox);
-        
+        normalizeBox = new JCheckBox("Normalize to Maximum", false);
+        panel.add(normalizeBox);
         return panel;
     }
 
     /**
-     * Creates panel for axis type selection.
+     * Creates panel for error bars option.
+     */
+    private JPanel createErrorBarsPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        errorBarsBox = new JCheckBox("Show Error Bars", true);
+        panel.add(errorBarsBox);
+        return panel;
+    }
+
+    /**
+     * Creates panel for axis type selection (wavelength/frequency).
      */
     private JPanel createAxisPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -157,17 +169,24 @@ public class AbsorptionOptionsDialog extends JDialog {
     }
 
     /**
-     * @return Name of selected reference measurement
+     * @return Selected plot type ("bar" or "curve")
      */
-    public String getReferenceName() {
-        return (String) referenceBox.getSelectedItem();
+    public String getPlotType() {
+        return barButton.isSelected() ? "bar" : "curve";
     }
 
     /**
-     * @return Name of selected sample measurement
+     * @return true if normalization should be applied
      */
-    public String getSampleName() {
-        return (String) sampleBox.getSelectedItem();
+    public boolean isNormalize() {
+        return normalizeBox.isSelected();
+    }
+
+    /**
+     * @return true if error bars should be shown
+     */
+    public boolean isShowErrorBars() {
+        return errorBarsBox.isSelected();
     }
 
     /**

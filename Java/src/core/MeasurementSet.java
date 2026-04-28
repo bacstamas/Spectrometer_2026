@@ -1,5 +1,9 @@
+package core;
+
 import java.util.*;
 import java.io.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 /**
  * Container for measurement data with metadata.
@@ -121,85 +125,62 @@ public class MeasurementSet {
      * Save measurement set to file
      */
     public void saveToFile(String filename) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
-            
-            pw.println("# Spectrometer Measurement Set");
-            pw.println("# Generated: " + new Date());
-            
-            if (name != null) {
-                pw.println("name=" + name);
-            }
-            pw.println();
+        com.fasterxml.jackson.databind.ObjectMapper mapper =
+                new com.fasterxml.jackson.databind.ObjectMapper();
 
-            // Parameters section
-            pw.println("[parameters]");
-            for (Map.Entry<String, Object> e : parameters.entrySet()) {
-                pw.println(e.getKey() + "=" + e.getValue());
-            }
-            pw.println();
+        Map<String, Object> jsonMap = new HashMap<>();
 
-            // Data section
-            pw.println("[data]");
-            for (double[] m : measurements) {
-                for (int i = 0; i < m.length; i++) {
-                    pw.print(m[i]);
-                    if (i < m.length - 1) pw.print(",");
-                }
-                pw.println();
-            }
-        }
+        jsonMap.put("name", name);
+        jsonMap.put("parameters", parameters);
+        jsonMap.put("measurements", measurements);
+
+        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filename), jsonMap);
     }
 
     /**
      * Load measurement set from file
      */
     public static MeasurementSet loadFromFile(String filename) throws IOException {
+        com.fasterxml.jackson.databind.ObjectMapper mapper =
+                new com.fasterxml.jackson.databind.ObjectMapper();
+
+        Map<String, Object> jsonMap =
+                mapper.readValue(new File(filename), Map.class);
+
         MeasurementSet set = new MeasurementSet();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            String section = "";
-            
-            while ((line = br.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) continue;
-                
-                // Section headers
-                if (line.equals("[parameters]")) {
-                    section = "parameters";
-                    continue;
-                }
-                if (line.equals("[data]")) {
-                    section = "data";
-                    continue;
-                }
-                
-                // Parse name
-                if (line.startsWith("name=")) {
-                    set.setName(line.substring(5));
-                    continue;
-                }
-                
-                // Parse parameters
-                if (section.equals("parameters")) {
-                    String[] parts = line.split("=", 2);
-                    if (parts.length == 2) {
-                        set.parameters.put(parts[0], parts[1]);
-                    }
-                }
-                
-                // Parse data
-                if (section.equals("data")) {
-                    String[] parts = line.split(",");
-                    double[] values = new double[parts.length];
-                    for (int i = 0; i < parts.length; i++) {
-                        values[i] = Double.parseDouble(parts[i]);
-                    }
-                    set.addMeasurement(values);
-                }
+
+        // Name
+        Object nameObj = jsonMap.get("name");
+        if (nameObj != null) {
+            set.setName(nameObj.toString());
+        }
+
+        // Parameters
+        Object paramsObj = jsonMap.get("parameters");
+        if (paramsObj instanceof Map) {
+            Map<?, ?> rawParams = (Map<?, ?>) paramsObj;
+            for (Map.Entry<?, ?> e : rawParams.entrySet()) {
+                set.parameters.put(e.getKey().toString(), e.getValue());
             }
         }
-        
+
+        // Measurements
+        Object measObj = jsonMap.get("measurements");
+        if (measObj instanceof List) {
+            List<?> list = (List<?>) measObj;
+
+            for (Object row : list) {
+                List<?> values = (List<?>) row;
+                double[] arr = new double[values.size()];
+
+                for (int i = 0; i < values.size(); i++) {
+                    arr[i] = ((Number) values.get(i)).doubleValue();
+                }
+
+                set.addMeasurement(arr);
+            }
+        }
+
         return set;
     }
 

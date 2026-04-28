@@ -1,3 +1,5 @@
+package ui.dialog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;

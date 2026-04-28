@@ -1,5 +1,6 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import ui.MainWindow;
 
 /**
  * Main application entry point.

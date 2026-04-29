@@ -1,6 +1,7 @@
 package core;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.*;
 import java.io.*;
 import java.util.*;
 import java.time.LocalDateTime;
@@ -28,11 +29,19 @@ public class Spectrometer {
     private MeasurementSet measurementSet = new MeasurementSet();
     private Map<String, Object> params = new HashMap<>();
 
+    private ConnectionListener connectionListener;
+    private volatile boolean disconnected = false;
+
+    public interface ConnectionListener {
+        void onDisconnected();
+    }
+
     /**
      * Constructor - establishes connection with Arduino/spectrometer
      * @throws Exception if connection fails
      */
-    public Spectrometer() throws Exception {
+    public Spectrometer(ConnectionListener listener) throws Exception {
+        this.connectionListener = listener;
         try {
             System.out.println("Initializing spectrometer connection...");
             
@@ -50,13 +59,40 @@ public class Spectrometer {
             
             // Initialize parameter map with defaults
             initializeParameters();
-            
+            setupDisconnectListener();
+
             System.out.println("Successfully connected to " + portName);
             
         } catch (Exception e) {
-            System.err.println("Connection failed: " + e.getMessage());
+            //System.err.println("Connection failed: " + e.getMessage());
             throw e;
         }
+    }
+
+    private void setupDisconnectListener() {
+        port.addDataListener(new SerialPortDataListener() {
+
+            @Override
+            public int getListeningEvents() {
+                return SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
+            }
+
+            @Override
+            public void serialEvent(SerialPortEvent event) {
+                if (event.getEventType() == SerialPort.LISTENING_EVENT_PORT_DISCONNECTED
+                    && !disconnected) {
+
+                    disconnected = true;
+
+                    System.out.println("Serial port disconnected!");
+                    port.closePort();
+
+                    if (connectionListener != null) {
+                        connectionListener.onDisconnected();
+                    }
+                }
+            }
+        });
     }
     
     /**

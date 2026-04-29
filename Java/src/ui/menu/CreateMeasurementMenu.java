@@ -14,6 +14,9 @@ public class CreateMeasurementMenu extends JMenu {
 	private MainWindow mainWindow;
 	private Spectrometer spectrometer;
 
+    private JMenuItem configureItem;
+    private JMenuItem measureItem;
+
 	public CreateMeasurementMenu(CreateMenuBar createMenuBar) {
 		super("Measurement");
 		this.createMenuBar = createMenuBar;
@@ -21,8 +24,8 @@ public class CreateMeasurementMenu extends JMenu {
 		spectrometer = mainWindow.spectrometer;
 
 		JMenuItem connectItem = new JMenuItem("Connect");
-        JMenuItem configureItem = new JMenuItem("Configure");
-        JMenuItem measureItem = new JMenuItem("Measure");
+        configureItem = new JMenuItem("Configure");
+        measureItem = new JMenuItem("Measure");
         
         // Initially disable configure and measure until connected
         configureItem.setEnabled(false);
@@ -42,16 +45,51 @@ public class CreateMeasurementMenu extends JMenu {
      * Connects to the spectrometer.
      */
     private void connectToSpectrometer(JMenuItem configureItem, JMenuItem measureItem) {
-        try {
-            spectrometer = new Spectrometer();
-            DialogUtils.showInfoDialog(mainWindow, "Connection successful", 
-                "Connected to " + spectrometer.getPortName());
-            configureItem.setEnabled(true);
-            measureItem.setEnabled(true);
-        } catch (Exception ex) {
-            spectrometer = null;
-            DialogUtils.handleError(mainWindow, "Connection error", ex);
+    // 1. Set wait cursor
+    mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+    SwingWorker<Spectrometer, Void> worker = new SwingWorker<>() {
+        @Override
+        protected Spectrometer doInBackground() throws Exception {
+            return new Spectrometer(() -> {
+                // This runs when disconnected
+                SwingUtilities.invokeLater(() -> handleDisconnect());
+            });
         }
+
+        @Override
+        protected void done() {
+            try {
+                // 2. Retrieve the created spectrometer
+                spectrometer = get(); 
+                mainWindow.setCursor(Cursor.getDefaultCursor());
+                DialogUtils.showInfoDialog(mainWindow, "Connection successful", 
+                    "Connected to " + spectrometer.getPortName());
+                
+                configureItem.setEnabled(true);
+                measureItem.setEnabled(true);
+            } catch (Exception ex) {
+                spectrometer = null;
+                mainWindow.setCursor(Cursor.getDefaultCursor());
+                DialogUtils.handleError(mainWindow, "Connection error", ex);
+            }
+        }
+    };
+
+    worker.execute();
+}
+
+    private void handleDisconnect() {
+        spectrometer = null;
+
+        DialogUtils.showErrorDialog(
+            mainWindow,
+            "Connection lost",
+            "The spectrometer was disconnected."
+        );
+
+        configureItem.setEnabled(false);
+        measureItem.setEnabled(false);
     }
 
         /**
@@ -98,23 +136,40 @@ public class CreateMeasurementMenu extends JMenu {
             mainWindow, "Enter measurement name:", "New Measurement", JOptionPane.PLAIN_MESSAGE
         );
 
-        if (baseName == null || baseName.trim().isEmpty()) {
-            return;
-        }
+        if (baseName == null || baseName.trim().isEmpty()) return;
 
-        try {
-            spectrometer.measure(baseName.trim());
-            MeasurementSet set = spectrometer.getMeasurementSet();
-            String fullName = set.getName();
-            
-            mainWindow.measurementListModel.addElement(fullName);
-            mainWindow.measurementSets.put(fullName, set);
-            
-            DialogUtils.showInfoDialog(mainWindow,"Measurement completed", fullName);
-            
-        } catch (Exception ex) {
-            DialogUtils.handleError(mainWindow,"Measurement failed", ex);
-        }
+        // 1. Set the wait cursor on the MainWindow
+        mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        // 2. Perform the task in a background thread
+        SwingWorker<MeasurementSet, Void> worker = new SwingWorker<>() {
+            @Override
+            protected MeasurementSet doInBackground() throws Exception {
+                // This runs on a separate thread, so the UI stays responsive
+                spectrometer.measure(baseName.trim());
+                return spectrometer.getMeasurementSet();
+            }
+
+            @Override
+            protected void done() {
+                // This runs back on the Event Dispatch Thread when finished
+                try {
+                    MeasurementSet set = get(); // Retrieves the result from doInBackground
+                    String fullName = set.getName();
+                    
+                    mainWindow.measurementListModel.addElement(fullName);
+                    mainWindow.measurementSets.put(fullName, set);
+                    mainWindow.setCursor(Cursor.getDefaultCursor());
+
+                    DialogUtils.showInfoDialog(mainWindow, "Measurement completed", fullName);
+                } catch (Exception ex) {
+                    mainWindow.setCursor(Cursor.getDefaultCursor());
+                    DialogUtils.handleError(mainWindow, "Measurement failed", ex);
+                }
+            }
+        };
+
+        worker.execute(); // Start the background thread
     }
     
     /**

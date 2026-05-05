@@ -81,6 +81,7 @@ The following circuit is used to drive the illumination source and interface the
 3. **Java Application**
    - Compile and run the Java GUI from the `Java/` folder.
    - The application reads spectral data from the Arduino and visualizes it.
+   - Detailed documentation for the Java application can be found here: [Java App Documentation](Java/docs/index.html).
 
 ---
 

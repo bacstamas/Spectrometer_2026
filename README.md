@@ -67,6 +67,7 @@ The following circuit is used to drive the illumination source and interface the
 | 5V               | BD139 Collector | Light source supply |
 | Light bulb +  | BD139 Emitter | Current flows through bulb |
 | Light bulb −    | GND         | Common system ground |
+
 ---
 
 ## 🚀 How to Use
@@ -81,7 +82,7 @@ The following circuit is used to drive the illumination source and interface the
 3. **Java Application**
    - Compile and run the Java GUI from the `Java/` folder.
    - The application reads spectral data from the Arduino and visualizes it.
-   - Detailed documentation for the Java application can be found here: [Java App Documentation](https://bacstamas.github.io/Spectrometer_2026/Docs/docs/index.html).
+   - Detailed documentation for the Java application can be found here: [Java App Documentation](https://bacstamas.github.io/Spectrometer_2026/Java/docs/index.html).
 
 ---
 

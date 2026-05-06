@@ -21,8 +21,6 @@ extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
-exclude_docs:
-  - JavaDocs/
   
 nav:
   - Introduction and Objectives: index.md
@@ -32,4 +30,5 @@ nav:
   - Error Analysis and Limitations: errors.md
   - Conclusion: conclusion.md
   - Bibliography: bibliography.md
-  - Java Documentation: './JavaDocs/index.html'
+  - Java Documentation:
+      - View API: JavaDocs/index.html

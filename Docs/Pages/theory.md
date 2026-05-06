@@ -16,7 +16,7 @@ The quantitative foundation of absorption spectrophotometry is the Beer-Lambert 
 The transmittance $T$ of the solution is defined as the ratio of the transmitted light intensity I to the incident light intensity $I_0$:
 $$T=\frac{I}{I_0}$$
 Transmittance is often expressed as a percentage. However, for analytical purposes, it is more convenient to work with the absorbance $A$, defined as the negative logarithm of the transmittance:
-$$A=-\log_{10}(T)=\log_{10}\left(\frac{I_0}{I} \right)$$
+\[A=-\log_{10}(T)=\log_{10}\left(\frac{I_0}{I} \right)\]
 The Beer-Lambert law states that the absorbance is directly proportional to both the concentration of the absorbing species and the path length of the light through the sample:
 $$A=\varepsilon\cdot l\cdot c$$
 where $\varepsilon$ is the molar absorptivity (also called the molar extinction coefficient), a constant characteristic of the absorbing substance at a given wavelength, $l$ is the path length of the light through the sample (typically 1 cm in standard cuvettes), and $c$ is the concentration of the absorbing species. The molar absorptivity has units of $\text{L mol}^{-1} \text{cm}^{-1}$ and can vary enormously between different compounds and different wavelengths \[1\].

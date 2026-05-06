@@ -33,5 +33,4 @@ nav:
   - Error Analysis and Limitations: errors.md
   - Conclusion: conclusion.md
   - Bibliography: bibliography.md
-  - Java Documentation:
-      - View API: JavaDocs/index.html
+  - Java Documentation: 'JavaDocs/index.html'

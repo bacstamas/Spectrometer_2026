@@ -4,7 +4,7 @@
 
 Spectroscopy is the branch of science concerned with the interaction between electromagnetic radiation and matter. When light encounters a substance, several things can happen: it may be transmitted, reflected, scattered, or absorbed, depending on the nature of the material and the wavelength of the radiation. Spectroscopy exploits these interactions to obtain information about the physical and chemical properties of substances. Different regions of the electromagnetic spectrum give rise to different types of spectroscopic techniques. X-ray spectroscopy probes the inner electrons of atoms, infrared spectroscopy reveals molecular vibrations, and UV-visible spectroscopy, which is the focus of this work, involves transitions between electronic energy levels [1].
 
-![Frequency spectrum](/Docs/Figures/frequency_figure.png)
+![Frequency spectrum](../Figures/frequency_figure.png)
 *The electromagnetic spectrum, showing the full range of radiation from cosmic rays to radio waves. The visible region, spanning approximately 380 to 780 nm, is highlighted with its characteristic color gradient. Both wavelength and frequency scales are shown*
 
 The electromagnetic spectrum spans an enormous range of wavelengths and frequencies, from very short gamma rays at one extreme to long radio waves at the other. The UV-visible region occupies only a small portion of this spectrum, roughly from 190 nm to 800 nm, but it is particularly important because the energy of photons in this range corresponds to the energy differences between electronic states in many molecules. When a photon of the right energy strikes a molecule, it can be absorbed, promoting an electron from a lower energy level to a higher one. The wavelengths at which this absorption occurs are characteristic of the molecular structure, making UV-visible spectroscopy a powerful tool for both qualitative identification and quantitative analysis of chemical substances \[1\].
@@ -21,12 +21,12 @@ The Beer-Lambert law states that the absorbance is directly proportional to both
 $$A=\varepsilon\cdot l\cdot c$$
 where $\varepsilon$ is the molar absorptivity (also called the molar extinction coefficient), a constant characteristic of the absorbing substance at a given wavelength, $l$ is the path length of the light through the sample (typically 1 cm in standard cuvettes), and $c$ is the concentration of the absorbing species. The molar absorptivity has units of $\text{L mol}^{-1} \text{cm}^{-1}$ and can vary enormously between different compounds and different wavelengths \[1\].
 
-![Beer-Lambert](/Docs/Figures/Beer-Lambert.pdf)
+![Beer-Lambert](../Figures/Beer-Lambert.pdf)
 *Schematic illustration of the Beer-Lambert law. A beam of incident light with intensity $I_0$ passes through a sample of path length $l$, emerging with reduced intensity $I$ due to absorption by the medium.*
 
 The Beer-Lambert law is the cornerstone of quantitative spectrophotometry. If the molar absorptivity of a substance is known, measuring the absorbance of a solution immediately gives its concentration. In practice, a calibration curve is often constructed by measuring the absorbance of a series of solutions with known concentrations, and the unknown concentration is then read off from this curve. The law holds well at low to moderate concentrations, but deviations can occur at high concentrations, where interactions between molecules begin to affect the absorption behavior, or when the incident light is not truly monochromatic \[1\].
 
-![Calibration Curve](/Docs/Figures/calibration_curve.pdf)
+![Calibration Curve](../Figures/calibration_curve.pdf)
 *Left: example absorption spectra of a colored solution at five different concentrations, illustrating the characteristic shape of an absorption band and the increase in absorbance with concentration. Right: absorbance as a function of concentration at six specific wavelengths, illustrating the linear relationship predicted by the Beer-Lambert law.*
 
 ### Absorption Spectra and Molecular Structure
@@ -39,7 +39,7 @@ The shape and position of absorption bands in the UV-visible spectrum depend on 
 
 A UV-visible absorption spectrophotometer is an instrument designed to measure the absorbance of a sample as a function of wavelength. Despite the many variations in design and complexity that exist, all spectrophotometers share the same fundamental architecture, consisting of five basic components: a light source, a wavelength selector, a sample holder, a detector, and a readout system \[1\].
 
-![Spectrometer structure](/Docs/Figures/spectrometer_structure.pdf)
+![Spectrometer structure](../Figures/spectrometer_structure.pdf)
 *Block diagram of the fundamental components of a single-beam absorption spectrophotometer: a light source, a monochromator for wavelength selection, a sample holder, and a detector.*
 
 The light source must emit radiation across the entire wavelength range of interest with sufficient and stable intensity. For UV-visible spectrophotometry, two types of lamps are commonly used in commercial instruments: a deuterium lamp, which provides continuous radiation in the UV region (190–400 nm), and a tungsten-halogen lamp, which covers the visible and near-infrared region (350–900 nm). Many instruments automatically switch between the two lamps as the wavelength scan crosses the boundary between the UV and visible regions. In lower-cost and educational instruments, white LEDs are a popular alternative, as they are inexpensive, energy-efficient, and emit across much of the visible range, though with a non-uniform spectral output \[1\]\[3\].

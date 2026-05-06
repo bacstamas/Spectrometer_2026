@@ -48,7 +48,7 @@ To build the spectrometer, you need the following components:
 The following circuit is used to drive the illumination source and interface the AS7265x sensor with the Arduino:
 
 
-![Spectrometer Circuit Diagram](/Docs/circuit_design_1.png)
+![Spectrometer Circuit Diagram](/Docs/Figures/circuit_design_1.png)
 
 ### Arduino Uno to AS7265x (I2C)
 

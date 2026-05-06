@@ -11,7 +11,7 @@ MANIFEST     = manifest.txt
 MAIN_CLASS   = Main
 DIST_DIR     = dist
 APP_NAME     = SpectroMeter
-ICON_PATH     = ../Docs/spectro.png
+ICON_PATH     = ../Docs/Figures/spectro.png
 
 # Classpath for compilation (includes all jars in lib)
 # Note: Use ":" for Linux/macOS and ";" for Windows

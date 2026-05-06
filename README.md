@@ -1,5 +1,5 @@
 
-# DIY Spectrometer – Master’s Thesis Project
+# DIY Spectrometer – [Master’s Thesis](https://bacstamas.github.io/Spectrometer_2026/) Project
 
 **Author:** Bács Tamás  
 **Program:** Computational Physics MSc  

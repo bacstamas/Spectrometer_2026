@@ -38,13 +38,8 @@ theme:
 nav:
   - Introduction and Objectives: introduction.md
   - Theoretical Background: theory.md
-    - Spectroscopy in General: theory/spectroscopy.md
-    - Absorption (UV/Vis) Spectroscopy: theory/absorption.md
   - Review of Low-Cost / DIY Spectrophotometers: review.md
   - Design and Implementation of the Spectrophotometer: implementation.md
-    - Hardware: implementation/hardware.md
-    - Software: implementation/software.md
-    - Experimental Results and Validation: implementation/results.md
   - Error Analysis and Limitations: errors.md
   - Conclusion: conclusion.md
   - Bibliography: bibliography.md

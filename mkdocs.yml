@@ -13,6 +13,8 @@ docs_dir: Docs
 
 # 1. Enable the math extension
 markdown_extensions:
+  - footnotes
+  - attr_list
   - pymdownx.arithmatex:
       generic: true
 

@@ -4,3 +4,5 @@ remote_theme: pmarsceill/just-the-docs
 # This ensures your site is accessible at /Spectrometer_2026/
 baseurl: "/Spectrometer_2026"
 include: ["Docs/Pages"]
+exclude:
+  - jquery*

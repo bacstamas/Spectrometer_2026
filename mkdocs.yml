@@ -9,7 +9,7 @@ theme:
     - search.suggest
 
 # This tells MkDocs where to find your files
-docs_dir: Docs/Pages
+docs_dir: Docs
 
 # 1. Enable the math extension
 markdown_extensions:
@@ -18,14 +18,15 @@ markdown_extensions:
 
 # 2. Link the MathJax library to render the symbols
 extra_javascript:
-  - javascripts/mathjax.js
+  - Pages/javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   
 nav:
-  - Introduction and Objectives: index.md
-  - Theoretical Background: theory.md
-  - Review of Low-Cost / DIY Spectrophotometers: review.md
-  - Design and Implementation of the Spectrophotometer: implementation.md
-  - Error Analysis and Limitations: errors.md
-  - Conclusion: conclusion.md
-  - Bibliography: bibliography.md
+  - Introduction and Objectives: Pages/index.md
+  - Theoretical Background: Pages/theory.md
+  - Review of Low-Cost / DIY Spectrophotometers: Pages/review.md
+  - Design and Implementation of the Spectrophotometer: Pages/implementation.md
+  - Error Analysis and Limitations: Pages/errors.md
+  - Conclusion: Pages/conclusion.md
+  - Bibliography: Pages/bibliography.md
+  - Java Documentation: JavaDocs/index.html

@@ -1,8 +1,50 @@
 title: DIY Spectrometer
 description: Master’s Thesis Project - Computational Physics
-remote_theme: pmarsceill/just-the-docs
+#remote_theme: pmarsceill/just-the-docs
 # This ensures your site is accessible at /Spectrometer_2026/
 baseurl: "/Spectrometer_2026"
 include: ["Docs/Pages"]
-exclude:
-  - jquery*
+
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: "numpy" # Or "google", "sphinx" - choose based on your preference
+            show_root_heading: false
+            show_root_full_path: false
+            show_object_full_path: false
+            show_if_no_docstring: false
+            show_category_heading: true
+            show_bases: true
+            heading_level: 2
+            separate_signature: true
+            show_source_link: false # This will hide the file path
+            filters: ["!^__file__", "!^__package__"]
+            show_attributes: false
+
+
+#site_name: OptiSim Documentation
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.sections
+    - search.highlight
+    - search.suggest
+
+nav:
+  - Introduction and Objectives: introduction.md
+  - Theoretical Background: theory.md
+    - Spectroscopy in General: theory/spectroscopy.md
+    - Absorption (UV/Vis) Spectroscopy: theory/absorption.md
+  - Review of Low-Cost / DIY Spectrophotometers: review.md
+  - Design and Implementation of the Spectrophotometer: implementation.md
+    - Hardware: implementation/hardware.md
+    - Software: implementation/software.md
+    - Experimental Results and Validation: implementation/results.md
+  - Error Analysis and Limitations: errors.md
+  - Conclusion: conclusion.md
+  - Bibliography: bibliography.md

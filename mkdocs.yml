@@ -18,7 +18,7 @@ markdown_extensions:
 
 # 2. Link the MathJax library to render the symbols
 extra_javascript:
-  - Pages/javascripts/mathjax.js
+  - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   
 nav:

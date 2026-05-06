@@ -1,9 +1,9 @@
-title: DIY Spectrometer
-description: Master’s Thesis Project - Computational Physics
+#title: DIY Spectrometer
+#description: Master’s Thesis Project - Computational Physics
 #remote_theme: pmarsceill/just-the-docs
 # This ensures your site is accessible at /Spectrometer_2026/
-baseurl: "/Spectrometer_2026"
-include: ["Docs/Pages"]
+#baseurl: "/Spectrometer_2026"
+#include: ["Docs/Pages"]
 
 
 plugins:

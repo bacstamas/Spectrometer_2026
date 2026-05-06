@@ -14,19 +14,25 @@ The electromagnetic spectrum spans an enormous range of wavelengths and frequenc
 The quantitative foundation of absorption spectrophotometry is the Beer-Lambert law, which describes the relationship between the concentration of an absorbing substance and the amount of light it absorbs. To understand it, consider a beam of monochromatic light passing through a solution of an absorbing compound held in a transparent container called a cuvette. Some of the light will be absorbed by the molecules in solution, and the rest will be transmitted through to the detector.
 
 The transmittance $T$ of the solution is defined as the ratio of the transmitted light intensity I to the incident light intensity $I_0$:
+
 $$T=\frac{I}{I_0}$$
+
 Transmittance is often expressed as a percentage. However, for analytical purposes, it is more convenient to work with the absorbance $A$, defined as the negative logarithm of the transmittance:
-\[A=-\log_{10}(T)=\log_{10}\left(\frac{I_0}{I} \right)\]
+
+$$A=-\log_{10}(T)=\log_{10}\left(\frac{I_0}{I} \right)$$
+
 The Beer-Lambert law states that the absorbance is directly proportional to both the concentration of the absorbing species and the path length of the light through the sample:
+
 $$A=\varepsilon\cdot l\cdot c$$
+
 where $\varepsilon$ is the molar absorptivity (also called the molar extinction coefficient), a constant characteristic of the absorbing substance at a given wavelength, $l$ is the path length of the light through the sample (typically 1 cm in standard cuvettes), and $c$ is the concentration of the absorbing species. The molar absorptivity has units of $\text{L mol}^{-1} \text{cm}^{-1}$ and can vary enormously between different compounds and different wavelengths \[1\].
 
-![Beer-Lambert](../Figures/Beer-Lambert.pdf)
+![Beer-Lambert](../Figures/Beer-Lambert.svg)
 *Schematic illustration of the Beer-Lambert law. A beam of incident light with intensity $I_0$ passes through a sample of path length $l$, emerging with reduced intensity $I$ due to absorption by the medium.*
 
 The Beer-Lambert law is the cornerstone of quantitative spectrophotometry. If the molar absorptivity of a substance is known, measuring the absorbance of a solution immediately gives its concentration. In practice, a calibration curve is often constructed by measuring the absorbance of a series of solutions with known concentrations, and the unknown concentration is then read off from this curve. The law holds well at low to moderate concentrations, but deviations can occur at high concentrations, where interactions between molecules begin to affect the absorption behavior, or when the incident light is not truly monochromatic \[1\].
 
-![Calibration Curve](../Figures/calibration_curve.pdf)
+![Calibration Curve](../Figures/calibration_curve.png)
 *Left: example absorption spectra of a colored solution at five different concentrations, illustrating the characteristic shape of an absorption band and the increase in absorbance with concentration. Right: absorbance as a function of concentration at six specific wavelengths, illustrating the linear relationship predicted by the Beer-Lambert law.*
 
 ### Absorption Spectra and Molecular Structure
@@ -39,13 +45,15 @@ The shape and position of absorption bands in the UV-visible spectrum depend on 
 
 A UV-visible absorption spectrophotometer is an instrument designed to measure the absorbance of a sample as a function of wavelength. Despite the many variations in design and complexity that exist, all spectrophotometers share the same fundamental architecture, consisting of five basic components: a light source, a wavelength selector, a sample holder, a detector, and a readout system \[1\].
 
-![Spectrometer structure](../Figures/spectrometer_structure.pdf)
+![Spectrometer structure](../Figures/spectrometer_structure1.svg)
 *Block diagram of the fundamental components of a single-beam absorption spectrophotometer: a light source, a monochromator for wavelength selection, a sample holder, and a detector.*
 
 The light source must emit radiation across the entire wavelength range of interest with sufficient and stable intensity. For UV-visible spectrophotometry, two types of lamps are commonly used in commercial instruments: a deuterium lamp, which provides continuous radiation in the UV region (190–400 nm), and a tungsten-halogen lamp, which covers the visible and near-infrared region (350–900 nm). Many instruments automatically switch between the two lamps as the wavelength scan crosses the boundary between the UV and visible regions. In lower-cost and educational instruments, white LEDs are a popular alternative, as they are inexpensive, energy-efficient, and emit across much of the visible range, though with a non-uniform spectral output \[1\]\[3\].
 
 The wavelength selector is the component responsible for isolating a narrow band of wavelengths from the broadband output of the light source. In modern spectrophotometers, this is almost always achieved using a diffraction grating (a flat optical surface ruled with a large number of closely spaced parallel grooves). When light strikes the grating, it is diffracted at angles that depend on its wavelength according to the grating equation:
+
 $$n\lambda=d\sin \theta$$
+
 where $n$ is the diffraction order (typically 1), $\lambda$ is the wavelength of the diffracted light, $d$ is the spacing between adjacent grooves, and $\theta$ is the diffraction angle. By rotating the grating or scanning the detector angle, different wavelengths can be directed onto the sample in sequence, allowing a full spectrum to be recorded. Older instruments used prisms as dispersive elements, but gratings have largely replaced them due to their more linear dispersion and lower cost \[1\].
 
 The sample holder is typically a cuvette — a small transparent container with a precisely defined path length, usually 1 cm. Cuvettes for UV measurements must be made from materials that do not absorb UV radiation, such as quartz or fused silica. For measurements confined to the visible region, less expensive plastic or glass cuvettes are perfectly adequate \[1\].

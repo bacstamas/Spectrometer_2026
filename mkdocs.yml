@@ -20,6 +20,7 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/extra.js
 
 # 3. Tell MkDocs to include the folder in the final site anyway
 extra_templates:

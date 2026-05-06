@@ -5,15 +5,18 @@ on:
       - main
 permissions:
   contents: write
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      # Opt into Node 24 as requested by the warning
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4.1.7 # Check for @v5 if available by your current date
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
+      # Update to v4 of upload-artifact if you use it, 
+      # but standard MkDocs deploy usually just needs this:
       - run: pip install mkdocs-material
       - run: mkdocs gh-deploy --force

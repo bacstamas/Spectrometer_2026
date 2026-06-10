@@ -9,7 +9,11 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Main controller class for spectrometer hardware communication.
- * Handles serial port connection, configuration, and data acquisition.
+ * Handles serial port connection, configuration, and data acquisition
+ * for the AS726x spectrometer sensor connected via Arduino.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class Spectrometer {
 
@@ -32,13 +36,21 @@ public class Spectrometer {
     private ConnectionListener connectionListener;
     private volatile boolean disconnected = false;
 
+    /**
+     * Listener interface for connection events.
+     */
     public interface ConnectionListener {
+        /**
+         * Called when the serial port is disconnected.
+         */
         void onDisconnected();
     }
 
     /**
-     * Constructor - establishes connection with Arduino/spectrometer
-     * @throws Exception if connection fails
+     * Constructor - establishes connection with Arduino/spectrometer.
+     * 
+     * @param listener listener for disconnection events
+     * @throws Exception if connection fails (port not found or cannot open)
      */
     public Spectrometer(ConnectionListener listener) throws Exception {
         this.connectionListener = listener;
@@ -69,6 +81,9 @@ public class Spectrometer {
         }
     }
 
+    /**
+     * Sets up a listener for serial port disconnection events.
+     */
     private void setupDisconnectListener() {
         port.addDataListener(new SerialPortDataListener() {
 
@@ -96,7 +111,7 @@ public class Spectrometer {
     }
     
     /**
-     * Configure serial port parameters
+     * Configure serial port parameters (baud rate, data bits, stop bits, parity, timeouts).
      */
     private void configureSerialPort() {
         port.setBaudRate(115200);
@@ -113,7 +128,9 @@ public class Spectrometer {
     }
     
     /**
-     * Open port and flush startup messages
+     * Open port and flush startup messages from Arduino.
+     * 
+     * @throws Exception if port cannot be opened
      */
     private void initializeConnection() throws Exception {
         if (!port.openPort()) {
@@ -134,7 +151,14 @@ public class Spectrometer {
     }
     
     /**
-     * Configure measurement parameters
+     * Configure measurement parameters.
+     * 
+     * @param integrationTime integration time in milliseconds
+     * @param gain gain value (1, 4, 16, or 64)
+     * @param avg number of samples to average
+     * @param mode measurement mode ("raw" or "cal")
+     * @param numberOfMeasurements number of spectra to record
+     * @param lightInt LED intensity (0-100)
      */
     public void configure(int integrationTime, int gain, int avg, 
                          String mode, int numberOfMeasurements, int lightInt) {
@@ -155,7 +179,7 @@ public class Spectrometer {
     }
 
     /**
-     * Initialize parameter map with current values
+     * Initialize parameter map with current default values.
      */
     private void initializeParameters() {
         params.put("integrationTime", integrationTime);
@@ -167,8 +191,10 @@ public class Spectrometer {
     }
 
     /**
-     * Perform measurement with current configuration
-     * @param baseName base name for the measurement set
+     * Perform measurement with current configuration.
+     * 
+     * @param baseName base name for the measurement set (timestamp will be appended)
+     * @throws Exception if measurement fails or times out
      */
     public void measure(String baseName) throws Exception {
         // Create timestamped name
@@ -256,8 +282,12 @@ public class Spectrometer {
     }
 
     /**
-     * Parse CSV line into double array
-     * Expects 6 values for AS726x sensor
+     * Parse CSV line into double array.
+     * Expects 6 values for AS726x sensor (450, 500, 550, 570, 600, 650 nm).
+     * 
+     * @param line CSV string containing 6 comma-separated values
+     * @return double array of parsed values
+     * @throws Exception if format is invalid
      */
     private double[] parseCSV(String line) throws Exception {
         String[] tokens = line.split(",");
@@ -273,7 +303,9 @@ public class Spectrometer {
     }
 
     /**
-     * Find Arduino port by checking common identifiers
+     * Find Arduino port by checking common identifiers.
+     * 
+     * @return the first matching SerialPort, or null if none found
      */
     private SerialPort findArduinoPort() {
         for (SerialPort p : SerialPort.getCommPorts()) {
@@ -290,12 +322,22 @@ public class Spectrometer {
         return null;
     }
 
-    // Getters
+    /**
+     * Gets the current measurement set.
+     * 
+     * @return the MeasurementSet containing all recorded data
+     */
     public MeasurementSet getMeasurementSet() { return measurementSet; }
+    
+    /**
+     * Gets the serial port name.
+     * 
+     * @return the system port name (e.g., "COM3" or "/dev/ttyACM0")
+     */
     public String getPortName() { return portName; }
     
     /**
-     * Close serial port connection
+     * Close serial port connection.
      */
     public void close() {
         if (port != null && port.isOpen()) {

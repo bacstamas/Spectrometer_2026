@@ -1,13 +1,25 @@
+package app;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import ui.MainWindow;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Main application entry point.
  * Launches the spectrometer GUI.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class Main {
 
+    /**
+     * The main method that serves as the entry point for the application.
+     * 
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         // Launch GUI on Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {

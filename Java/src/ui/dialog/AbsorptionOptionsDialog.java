@@ -7,18 +7,29 @@ import java.util.List;
 /**
  * Dialog for configuring absorption plot options.
  * Allows selection of reference and sample measurements and axis type.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class AbsorptionOptionsDialog extends JDialog {
 
     // ==================== UI COMPONENTS ====================
     
+    /** Combo box for selecting reference measurement. */
     private JComboBox<String> referenceBox;
+    
+    /** Combo box for selecting sample measurement. */
     private JComboBox<String> sampleBox;
+    
+    /** Radio button for wavelength axis (nm). */
     private JRadioButton wavelengthButton;
+    
+    /** Radio button for frequency axis (THz). */
     private JRadioButton frequencyButton;
     
     // ==================== STATE ====================
     
+    /** Whether the user confirmed the dialog (clicked OK). */
     private boolean confirmed = false;
     
     // ==================== CONSTANTS ====================
@@ -32,6 +43,7 @@ public class AbsorptionOptionsDialog extends JDialog {
 
     /**
      * Constructs the absorption options dialog.
+     * 
      * @param parent Parent frame
      * @param measurementNames List of available measurement names
      */
@@ -62,6 +74,9 @@ public class AbsorptionOptionsDialog extends JDialog {
 
     /**
      * Creates the main options panel.
+     * 
+     * @param measurementNames array of measurement names for the combo boxes
+     * @return configured JPanel
      */
     private JPanel createOptionsPanel(String[] measurementNames) {
         JPanel panel = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, GRID_GAP, GRID_GAP));
@@ -76,6 +91,9 @@ public class AbsorptionOptionsDialog extends JDialog {
 
     /**
      * Creates panel for reference selection.
+     * 
+     * @param measurementNames array of measurement names
+     * @return configured JPanel
      */
     private JPanel createReferencePanel(String[] measurementNames) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -90,6 +108,9 @@ public class AbsorptionOptionsDialog extends JDialog {
 
     /**
      * Creates panel for sample selection.
+     * 
+     * @param measurementNames array of measurement names
+     * @return configured JPanel
      */
     private JPanel createSamplePanel(String[] measurementNames) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -103,7 +124,9 @@ public class AbsorptionOptionsDialog extends JDialog {
     }
 
     /**
-     * Creates panel for axis type selection.
+     * Creates panel for axis type selection (wavelength vs frequency).
+     * 
+     * @return configured JPanel
      */
     private JPanel createAxisPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -126,6 +149,8 @@ public class AbsorptionOptionsDialog extends JDialog {
 
     /**
      * Creates the button panel with OK and Cancel.
+     * 
+     * @return configured JPanel with buttons
      */
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -152,28 +177,36 @@ public class AbsorptionOptionsDialog extends JDialog {
     // ==================== GETTERS ====================
 
     /**
-     * @return true if user confirmed (clicked OK)
+     * Returns whether the user confirmed the dialog (clicked OK).
+     * 
+     * @return true if OK was clicked, false otherwise
      */
     public boolean isConfirmed() {
         return confirmed;
     }
 
     /**
-     * @return Name of selected reference measurement
+     * Returns the name of the selected reference measurement.
+     * 
+     * @return the reference measurement name, or null if none selected
      */
     public String getReferenceName() {
         return (String) referenceBox.getSelectedItem();
     }
 
     /**
-     * @return Name of selected sample measurement
+     * Returns the name of the selected sample measurement.
+     * 
+     * @return the sample measurement name, or null if none selected
      */
     public String getSampleName() {
         return (String) sampleBox.getSelectedItem();
     }
 
     /**
-     * @return true if wavelength axis should be used (false for frequency)
+     * Returns whether the wavelength axis should be used.
+     * 
+     * @return true for wavelength axis, false for frequency axis
      */
     public boolean isUseWavelength() {
         return wavelengthButton.isSelected();

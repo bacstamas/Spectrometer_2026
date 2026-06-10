@@ -6,16 +6,33 @@ import core.*;
 import ui.dialog.*;
 import ui.MainWindow;
 
+/**
+ * File menu providing load, save, and exit functionality.
+ * Allows loading previously saved measurement JSON files and
+ * saving the currently selected measurement to a JSON file.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
+ */
 public class CreateFileMenu extends JMenu {
-	private CreateMenuBar createMenuBar;
-	private MainWindow mainWindow;
+    
+    /** Reference to the parent menu bar. */
+    private CreateMenuBar createMenuBar;
+    
+    /** Reference to the main window. */
+    private MainWindow mainWindow;
 
-	public CreateFileMenu(CreateMenuBar createMenuBar) {
-		super("File");
-		this.createMenuBar = createMenuBar;
-		this.mainWindow = createMenuBar.mainWindow;
+    /**
+     * Constructs the File menu with its menu items.
+     * 
+     * @param createMenuBar the parent menu bar
+     */
+    public CreateFileMenu(CreateMenuBar createMenuBar) {
+        super("File");
+        this.createMenuBar = createMenuBar;
+        this.mainWindow = createMenuBar.mainWindow;
 
-		JMenuItem loadItem = new JMenuItem("Load Measurement");
+        JMenuItem loadItem = new JMenuItem("Load Measurement");
         JMenuItem saveItem = new JMenuItem("Save Measurement");
         JMenuItem exitItem = new JMenuItem("Exit");
 
@@ -27,15 +44,16 @@ public class CreateFileMenu extends JMenu {
         add(saveItem);
         addSeparator();
         add(exitItem);
-	}
+    }
 
-	    /**
-     * Saves the selected measurement to a file.
+    /**
+     * Saves the selected measurement to a JSON file.
+     * Prompts for file location and shows success/error dialogs.
      */
     private void saveMeasurementToFile() {
         String selectedName = mainWindow.measurementList.getSelectedValue();
         if (selectedName == null) {
-            DialogUtils.showErrorDialog(mainWindow,"Error", "No measurement selected.");
+            DialogUtils.showErrorDialog(mainWindow, "Error", "No measurement selected.");
             return;
         }
 
@@ -61,10 +79,10 @@ public class CreateFileMenu extends JMenu {
         }
     }
 
-	/**
-     * Loads a measurement set from a file.
+    /**
+     * Loads a measurement set from a JSON file.
+     * Validates the loaded data before adding to the measurement list.
      */
-	
     private void loadMeasurementFromFile() {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Load Measurement");
@@ -90,7 +108,7 @@ public class CreateFileMenu extends JMenu {
             mainWindow.measurementSets.put(name, set);
             mainWindow.measurementListModel.addElement(name);
             
-            DialogUtils.showInfoDialog(mainWindow,"Load successful", "Loaded measurement:\n" + name);
+            DialogUtils.showInfoDialog(mainWindow, "Load successful", "Loaded measurement:\n" + name);
             
         } catch (Exception ex) {
             DialogUtils.handleError(mainWindow, "Failed to load file", ex);
@@ -99,8 +117,11 @@ public class CreateFileMenu extends JMenu {
     
     /**
      * Validates a loaded measurement set.
+     * Checks that data exists and has the correct number of channels (6).
+     * 
+     * @param set the MeasurementSet to validate
+     * @return true if valid, false otherwise
      */
-    
     private boolean validateMeasurementSet(MeasurementSet set) {
         if (set.getMeasurements().isEmpty()) {
             DialogUtils.showErrorDialog(mainWindow, "Invalid file", "Selected file does not contain any measurement data.");
@@ -118,5 +139,4 @@ public class CreateFileMenu extends JMenu {
         
         return true;
     }
-    
 }

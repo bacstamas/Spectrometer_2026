@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Container for measurement data with metadata.
  * Handles storage, statistics, and file I/O for spectrometer measurements.
+ * Stores multiple spectra (each with 6 channels) along with measurement parameters.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class MeasurementSet {
 
@@ -21,6 +25,9 @@ public class MeasurementSet {
         "450 nm", "500 nm", "550 nm", "570 nm", "600 nm", "650 nm"
     };
 
+    /**
+     * Constructs an empty MeasurementSet.
+     */
     public MeasurementSet() {
         measurements = new ArrayList<>();
         parameters = new HashMap<>();
@@ -28,17 +35,45 @@ public class MeasurementSet {
 
     // ==================== METADATA ====================
 
+    /**
+     * Sets the measurement parameters.
+     * 
+     * @param params map of parameter names to values
+     */
     public void setParameters(Map<String, Object> params) {
         parameters.clear();
         parameters.putAll(params);
     }
 
+    /**
+     * Sets the name of this measurement set.
+     * 
+     * @param name the measurement name
+     */
     public void setName(String name) { this.name = name; }
+    
+    /**
+     * Gets the name of this measurement set.
+     * 
+     * @return the measurement name
+     */
     public String getName() { return name; }
+    
+    /**
+     * Gets a copy of the measurement parameters.
+     * 
+     * @return a new HashMap containing all parameters
+     */
     public Map<String, Object> getParameters() { return new HashMap<>(parameters); }
 
     // ==================== DATA MANAGEMENT ====================
 
+    /**
+     * Adds a single measurement (spectrum) to the set.
+     * 
+     * @param measurement array of 6 channel values
+     * @throws IllegalArgumentException if measurement length is not 6
+     */
     public void addMeasurement(double[] measurement) {
         if (measurement.length != EXPECTED_CHANNELS) {
             throw new IllegalArgumentException(
@@ -47,23 +82,44 @@ public class MeasurementSet {
         measurements.add(measurement.clone());
     }
 
+    /**
+     * Returns an unmodifiable list of all measurements.
+     * 
+     * @return unmodifiable List of measurement arrays
+     */
     public List<double[]> getMeasurements() { 
         return Collections.unmodifiableList(measurements);
     }
 
+    /**
+     * Clears all measurements, parameters, and name.
+     */
     public void clear() {
         measurements.clear();
         parameters.clear();
         name = null;
     }
 
+    /**
+     * Checks if the measurement set is empty.
+     * 
+     * @return true if no measurements are stored
+     */
     public boolean isEmpty() { return measurements.isEmpty(); }
+    
+    /**
+     * Returns the number of measurements stored.
+     * 
+     * @return the size of the measurement set
+     */
     public int size() { return measurements.size(); }
 
     // ==================== STATISTICS ====================
 
     /**
-     * Calculate mean and standard deviation across all measurements
+     * Calculate mean and standard deviation across all measurements.
+     * 
+     * @return StatisticsResult containing mean and std arrays
      */
     public StatisticsResult getAverageAndStd() {
         if (measurements.isEmpty()) {
@@ -100,7 +156,9 @@ public class MeasurementSet {
     }
 
     /**
-     * Get formatted statistics as string
+     * Get formatted statistics as string.
+     * 
+     * @return formatted string with wavelength, average, and standard deviation
      */
     public String getStatisticsString() {
         StatisticsResult stats = getAverageAndStd();
@@ -122,7 +180,10 @@ public class MeasurementSet {
     // ==================== FILE I/O ====================
 
     /**
-     * Save measurement set to file
+     * Save measurement set to a JSON file.
+     * 
+     * @param filename the path to the output file
+     * @throws IOException if file cannot be written
      */
     public void saveToFile(String filename) throws IOException {
         com.fasterxml.jackson.databind.ObjectMapper mapper =
@@ -138,7 +199,11 @@ public class MeasurementSet {
     }
 
     /**
-     * Load measurement set from file
+     * Load measurement set from a JSON file.
+     * 
+     * @param filename the path to the input file
+     * @return a new MeasurementSet populated from the file
+     * @throws IOException if file cannot be read or parsed
      */
     public static MeasurementSet loadFromFile(String filename) throws IOException {
         com.fasterxml.jackson.databind.ObjectMapper mapper =
@@ -188,6 +253,9 @@ public class MeasurementSet {
 
     /**
      * Returns a formatted string representation of the measurement set.
+     * Includes parameters, statistics, and raw data.
+     * 
+     * @return formatted string containing all measurement information
      */
     @Override
     public String toString() {
@@ -235,6 +303,11 @@ public class MeasurementSet {
 
     /**
      * Helper method to safely append a parameter to string builder.
+     * 
+     * @param sb the StringBuilder to append to
+     * @param key the parameter key in the map
+     * @param label the display label for the parameter
+     * @param unit the unit string to append (e.g., " ms")
      */
     private void appendParameter(StringBuilder sb, String key, String label, String unit) {
         Object value = parameters.get(key);
@@ -244,15 +317,25 @@ public class MeasurementSet {
             sb.append(String.format("  %-20s: %s\n", label, "Not set"));
         }
     }
+    
     // ==================== INNER CLASS ====================
 
     /**
-     * Container for statistical results
+     * Container for statistical results (mean and standard deviation).
      */
     public static class StatisticsResult {
+        /** Mean values for each channel. */
         public final double[] mean;
+        
+        /** Standard deviation values for each channel. */
         public final double[] std;
         
+        /**
+         * Constructs a StatisticsResult.
+         * 
+         * @param mean array of mean values
+         * @param std array of standard deviation values
+         */
         public StatisticsResult(double[] mean, double[] std) {
             this.mean = mean;
             this.std = std;

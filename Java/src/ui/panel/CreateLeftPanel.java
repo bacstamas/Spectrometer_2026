@@ -6,18 +6,32 @@ import core.*;
 import ui.dialog.*;
 import ui.MainWindow;
 
+/**
+ * Left panel of the main window containing the list of measurements.
+ * Supports single selection, double-click to view details, and DELETE key
+ * to remove selected measurements.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
+ */
 public class CreateLeftPanel extends JPanel {
 
+    /** Reference to the main window for accessing shared data. */
     public MainWindow mainWindow;
 
-	public CreateLeftPanel(MainWindow mainWindow){
-		super(new BorderLayout());
-		this.mainWindow = mainWindow;
+    /**
+     * Constructs the left panel with the measurement list.
+     * 
+     * @param mainWindow the parent MainWindow instance
+     */
+    public CreateLeftPanel(MainWindow mainWindow) {
+        super(new BorderLayout());
+        this.mainWindow = mainWindow;
 
-		mainWindow.measurementListModel = new DefaultListModel<>();
-    	mainWindow.measurementList = new JList<>(mainWindow.measurementListModel);
+        mainWindow.measurementListModel = new DefaultListModel<>();
+        mainWindow.measurementList = new JList<>(mainWindow.measurementListModel);
 
-		mainWindow.measurementList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        mainWindow.measurementList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         setupKeyboardShortcuts();
         setupMouseListeners();
@@ -27,11 +41,11 @@ public class CreateLeftPanel extends JPanel {
         
         setBorder(BorderFactory.createTitledBorder("Measurements"));
         add(scrollPane, BorderLayout.CENTER);
-        
     }
 
     /**
      * Sets up keyboard shortcuts for the measurement list.
+     * DELETE key removes the selected measurement.
      */
     private void setupKeyboardShortcuts() {
         InputMap im = mainWindow.measurementList.getInputMap(JComponent.WHEN_FOCUSED);
@@ -48,6 +62,7 @@ public class CreateLeftPanel extends JPanel {
     
     /**
      * Sets up mouse listeners for double-click actions.
+     * Double-click shows measurement details.
      */
     private void setupMouseListeners() {
         mainWindow.measurementList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -61,7 +76,7 @@ public class CreateLeftPanel extends JPanel {
     }
 
     /**
-     * Shows measurement details in a dialog.
+     * Shows measurement details in a dialog using the MeasurementSet's toString().
      */
     private void showMeasurementDetails() {
         String name = mainWindow.measurementList.getSelectedValue();
@@ -88,17 +103,17 @@ public class CreateLeftPanel extends JPanel {
     }
 
     /**
-     * Deletes the selected measurement.
+     * Deletes the selected measurement from the list and data map.
      */
-	private void deleteSelectedMeasurement() {
-		String name = mainWindow.measurementList.getSelectedValue();
-		if (name == null) return;
+    private void deleteSelectedMeasurement() {
+        String name = mainWindow.measurementList.getSelectedValue();
+        if (name == null) return;
 
-		int index = mainWindow.measurementList.getSelectedIndex();
-		if (index >= 0) {
-			mainWindow.measurementListModel.remove(index);
-		}
+        int index = mainWindow.measurementList.getSelectedIndex();
+        if (index >= 0) {
+            mainWindow.measurementListModel.remove(index);
+        }
 
-		mainWindow.measurementSets.remove(name);
-	}
+        mainWindow.measurementSets.remove(name);
+    }
 }

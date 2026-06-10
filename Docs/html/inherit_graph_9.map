@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,68,80"/>
+<area shape="rect" id="Node000001" href="$classui_1_1menu_1_1CreateFileMenu.html" title="File menu providing load, save, and exit functionality." alt="" coords="149,5,331,31"/>
+<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="80,50,115,39,165,28,166,33,117,45,82,55"/>
+<area shape="rect" id="Node000002" href="$classui_1_1menu_1_1CreateMeasurementMenu.html" title="Measurement menu providing spectrometer connection, configuration, and data acquisition functionality..." alt="" coords="116,55,364,80"/>
+<area shape="poly" id="edge6_Node000000_Node000002" title=" " alt="" coords="81,65,116,65,116,70,81,70"/>
+<area shape="rect" id="Node000003" href="$classui_1_1menu_1_1CreateViewMenu.html" title="View menu providing spectrum and absorption plot visualization." alt="" coords="145,104,335,129"/>
+<area shape="poly" id="edge7_Node000000_Node000003" title=" " alt="" coords="82,79,117,89,172,101,170,106,115,94,80,84"/>
+</map>

@@ -7,6 +7,10 @@ import java.util.*;
 /**
  * Handles visualization of spectrometer data.
  * Supports bar and curve plots with optional error bars and normalization.
+ * Can display data on wavelength or frequency axes.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class Visualizer {
 
@@ -30,16 +34,38 @@ public class Visualizer {
     // Channel labels
     private static final String[] CHANNEL_LABELS = {"V", "B", "G", "Y", "O", "R"};
     
-    public enum PlotType { BAR, CURVE }
-    public enum AxisType { WAVELENGTH, FREQUENCY }
+    /**
+     * Enumeration of plot types.
+     */
+    public enum PlotType { 
+        /** Bar chart (categorical). */
+        BAR, 
+        /** Curve/line chart. */
+        CURVE 
+    }
+
+    /**
+     * Enumeration of axis types for the x-axis.
+     */
+    public enum AxisType { 
+        /** Wavelength axis in nanometers (nm). */
+        WAVELENGTH, 
+        /** Frequency axis in Terahertz (THz). */
+        FREQUENCY 
+    }
     
+    /**
+     * Constructs a Visualizer for the given measurement set.
+     * 
+     * @param measurementSet the data to visualize
+     */
     public Visualizer(MeasurementSet measurementSet) {
         this.measurementSet = measurementSet;
         calculateFrequencies();
     }
     
     /**
-     * Calculate frequencies from wavelengths
+     * Calculate frequencies from wavelengths using c = λf.
      */
     private void calculateFrequencies() {
         frequenciesTHz = new double[wavelengthsNm.length];
@@ -52,14 +78,48 @@ public class Visualizer {
 
     // ==================== CONFIGURATION ====================
 
+    /**
+     * Sets the plot type.
+     * 
+     * @param plotType the PlotType enum value
+     */
     public void setPlotType(PlotType plotType) { this.plotType = plotType; }
+    
+    /**
+     * Sets the plot type from a string.
+     * 
+     * @param plotType "bar" for bar chart, anything else for curve
+     */
     public void setPlotType(String plotType) {
         this.plotType = plotType.equalsIgnoreCase("bar") ? PlotType.BAR : PlotType.CURVE;
     }
     
+    /**
+     * Sets whether to normalize data to maximum value.
+     * 
+     * @param normalize true to normalize, false otherwise
+     */
     public void setNormalize(boolean normalize) { this.normalize = normalize; }
+    
+    /**
+     * Sets whether to show error bars.
+     * 
+     * @param showErrorBars true to show error bars, false otherwise
+     */
     public void setShowErrorBars(boolean showErrorBars) { this.showErrorBars = showErrorBars; }
+    
+    /**
+     * Sets the axis type.
+     * 
+     * @param axisType the AxisType enum value
+     */
     public void setAxisType(AxisType axisType) { this.axisType = axisType; }
+    
+    /**
+     * Convenience method to set wavelength/frequency axis.
+     * 
+     * @param useWavelength true for wavelength axis, false for frequency
+     */
     public void useWavelengthAxis(boolean useWavelength) {
         this.axisType = useWavelength ? AxisType.WAVELENGTH : AxisType.FREQUENCY;
     }
@@ -67,7 +127,9 @@ public class Visualizer {
     // ==================== CHART CREATION ====================
 
     /**
-     * Create bar chart for current measurement set
+     * Create bar chart for current measurement set.
+     * 
+     * @return CategoryChart configured with the measurement data
      */
     public CategoryChart createBarChart() {
         MeasurementSet.StatisticsResult stats = measurementSet.getAverageAndStd();
@@ -98,7 +160,9 @@ public class Visualizer {
     }
 
     /**
-     * Create curve chart for current measurement set
+     * Create curve chart for current measurement set.
+     * 
+     * @return XYChart configured with the measurement data
      */
     public XYChart createCurveChart() {
         MeasurementSet.StatisticsResult stats = measurementSet.getAverageAndStd();
@@ -129,7 +193,12 @@ public class Visualizer {
     }
 
     /**
-     * Create absorption chart comparing reference and sample
+     * Create absorption chart comparing reference and sample.
+     * Absorbance A = -log₁₀(I/I₀).
+     * 
+     * @param reference the reference measurement set (I₀)
+     * @param sample the sample measurement set (I)
+     * @return XYChart showing absorption spectrum
      */
     public XYChart createAbsorptionChart(MeasurementSet reference, MeasurementSet sample) {
         MeasurementSet.StatisticsResult refStats = reference.getAverageAndStd();
@@ -160,7 +229,7 @@ public class Visualizer {
     // ==================== DATA PREPARATION ====================
 
     /**
-     * Container for prepared plot data
+     * Container for prepared plot data.
      */
     private class PlotData {
         List<String> labels;      // for bar charts
@@ -170,7 +239,11 @@ public class Visualizer {
     }
     
     /**
-     * Prepare data for plotting based on current settings
+     * Prepare data for plotting based on current settings.
+     * 
+     * @param mean the mean values for each channel
+     * @param std the standard deviation values for each channel
+     * @return PlotData containing processed data
      */
     private PlotData preparePlotData(double[] mean, double[] std) {
         PlotData data = new PlotData();
@@ -206,7 +279,11 @@ public class Visualizer {
     }
     
     /**
-     * Calculate absorbance A = -log10(I/I0)
+     * Calculate absorbance A = -log₁₀(I/I₀).
+     * 
+     * @param reference reference intensity values (I₀)
+     * @param sample sample intensity values (I)
+     * @return array of absorbance values (NaN where calculation is invalid)
      */
     private double[] calculateAbsorbance(double[] reference, double[] sample) {
         int n = Math.min(reference.length, sample.length);
@@ -225,10 +302,20 @@ public class Visualizer {
 
     // ==================== UTILITY METHODS ====================
 
+    /**
+     * Gets the numeric values for the current axis type.
+     * 
+     * @return array of wavelengths (nm) or frequencies (THz)
+     */
     private double[] getAxisValues() {
         return axisType == AxisType.WAVELENGTH ? wavelengthsNm : frequenciesTHz;
     }
     
+    /**
+     * Gets formatted labels for the current axis type.
+     * 
+     * @return array of label strings
+     */
     private String[] getAxisLabels() {
         String[] labels = new String[wavelengthsNm.length];
         if (axisType == AxisType.WAVELENGTH) {
@@ -243,10 +330,20 @@ public class Visualizer {
         return labels;
     }
     
+    /**
+     * Gets the x-axis title for the current axis type.
+     * 
+     * @return "Wavelength (nm)" or "Frequency (THz)"
+     */
     private String getAxisTitle() {
         return axisType == AxisType.WAVELENGTH ? "Wavelength (nm)" : "Frequency (THz)";
     }
     
+    /**
+     * Gets the y-axis title based on measurement mode and normalization setting.
+     * 
+     * @return "Calibrated Intensity", "Raw Counts", or with "(normalized)" suffix
+     */
     private String getYAxisTitle() {
         Map<String, Object> params = measurementSet.getParameters();
         Object mode = params.get("mode");
@@ -255,6 +352,12 @@ public class Visualizer {
         return normalize ? base + " (normalized)" : base;
     }
     
+    /**
+     * Converts a double array to a List of Double.
+     * 
+     * @param arr the input array
+     * @return List containing the array elements
+     */
     private List<Double> toList(double[] arr) {
         List<Double> list = new ArrayList<>();
         for (double v : arr) list.add(v);

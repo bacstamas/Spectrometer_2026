@@ -8,7 +8,7 @@ TEMP_DIR     = temp
 MAIN_JAR     = Main.jar
 MANIFEST     = manifest.txt
 
-MAIN_CLASS   = Main
+MAIN_CLASS   = app.Main
 DIST_DIR     = dist
 APP_NAME     = SpectroMeter
 ICON_PATH     = ../Docs/Figures/spectro.png

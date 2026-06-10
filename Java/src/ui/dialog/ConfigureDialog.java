@@ -7,21 +7,37 @@ import java.util.Map;
 
 /**
  * Dialog for configuring spectrometer measurement parameters.
- * Provides input fields for integration time, gain, averaging, etc.
+ * Provides input fields for integration time, gain, averaging,
+ * number of measurements, mode, and light intensity.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class ConfigureDialog extends JDialog {
 
     // ==================== UI COMPONENTS ====================
     
+    /** Integration time input field (ms). */
     private JTextField intField;
+    
+    /** Averaging input field (number of samples to average). */
     private JTextField avgField;
+    
+    /** Number of measurements input field. */
     private JTextField countField;
+    
+    /** Light intensity spinner (0-100). */
     private JSpinner lightSpinner;
+    
+    /** Gain selection combo box (1, 4, 16, 64). */
     private JComboBox<Integer> gainBox;
+    
+    /** Mode selection combo box ("raw" or "cal"). */
     private JComboBox<String> modeBox;
     
     // ==================== STATE ====================
     
+    /** Whether the user confirmed the dialog (clicked OK). */
     private boolean confirmed = false;
     
     // ==================== CONSTANTS ====================
@@ -38,8 +54,9 @@ public class ConfigureDialog extends JDialog {
 
     /**
      * Constructs the configuration dialog.
+     * 
      * @param parent Parent frame
-     * @param currentParams Current parameter values (may be empty)
+     * @param currentParams Current parameter values (may be empty, uses defaults)
      */
     public ConfigureDialog(JFrame parent, Map<String, Object> currentParams) {
         super(parent, "Configure Measurement", true);
@@ -66,6 +83,9 @@ public class ConfigureDialog extends JDialog {
 
     /**
      * Creates the input form panel.
+     * 
+     * @param params current parameter values
+     * @return configured JPanel
      */
     private JPanel createFormPanel(Map<String, Object> params) {
         JPanel panel = new JPanel(new GridLayout(6, 2, 8, 8));
@@ -85,6 +105,10 @@ public class ConfigureDialog extends JDialog {
     
     /**
      * Helper to add a labeled row to the form.
+     * 
+     * @param panel the panel to add to
+     * @param label the label text
+     * @param component the input component
      */
     private void addFormRow(JPanel panel, String label, JComponent component) {
         panel.add(new JLabel(label));
@@ -93,6 +117,8 @@ public class ConfigureDialog extends JDialog {
     
     /**
      * Initializes all input components with current values.
+     * 
+     * @param params current parameter values
      */
     private void initializeComponents(Map<String, Object> params) {
         intField = new JTextField(getParamValue(params, "int", "50"));
@@ -110,6 +136,9 @@ public class ConfigureDialog extends JDialog {
     
     /**
      * Creates the light intensity spinner.
+     * 
+     * @param params current parameter values
+     * @return configured JSpinner
      */
     private JSpinner createLightSpinner(Map<String, Object> params) {
         int initialValue = Integer.parseInt(getParamValue(params, "light", "50"));
@@ -126,6 +155,8 @@ public class ConfigureDialog extends JDialog {
 
     /**
      * Creates the button panel with OK and Cancel.
+     * 
+     * @return configured JPanel with buttons
      */
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -152,14 +183,18 @@ public class ConfigureDialog extends JDialog {
     // ==================== RESULT HANDLING ====================
 
     /**
-     * @return true if user confirmed (clicked OK)
+     * Returns whether the user confirmed the dialog (clicked OK).
+     * 
+     * @return true if OK was clicked, false otherwise
      */
     public boolean isConfirmed() {
         return confirmed;
     }
 
     /**
-     * @return Map of parameter names to values entered by user
+     * Returns the parameter values entered by the user.
+     * 
+     * @return Map with keys: int, gain, avg, count, mode, light
      */
     public Map<String, Object> getParameters() {
         Map<String, Object> params = new HashMap<>();
@@ -178,6 +213,11 @@ public class ConfigureDialog extends JDialog {
 
     /**
      * Safely gets a parameter value or returns default.
+     * 
+     * @param params parameter map
+     * @param key parameter key
+     * @param defaultValue default value if key not present
+     * @return parameter value as string, or defaultValue
      */
     private String getParamValue(Map<String, Object> params, String key, String defaultValue) {
         Object value = params.get(key);

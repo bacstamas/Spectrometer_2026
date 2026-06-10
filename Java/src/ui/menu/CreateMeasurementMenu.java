@@ -9,21 +9,43 @@ import core.*;
 import ui.dialog.*;
 import ui.MainWindow;
 
+/**
+ * Measurement menu providing spectrometer connection, configuration,
+ * and data acquisition functionality.
+ * Uses SwingWorker for background tasks to keep the UI responsive.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
+ */
 public class CreateMeasurementMenu extends JMenu {
-	private CreateMenuBar createMenuBar;
-	private MainWindow mainWindow;
-	private Spectrometer spectrometer;
+    
+    /** Reference to the parent menu bar. */
+    private CreateMenuBar createMenuBar;
+    
+    /** Reference to the main window. */
+    private MainWindow mainWindow;
+    
+    /** Spectrometer controller instance. */
+    private Spectrometer spectrometer;
 
+    /** Menu item for configuration (enabled only when connected). */
     private JMenuItem configureItem;
+    
+    /** Menu item for measurement (enabled only when connected). */
     private JMenuItem measureItem;
 
-	public CreateMeasurementMenu(CreateMenuBar createMenuBar) {
-		super("Measurement");
-		this.createMenuBar = createMenuBar;
-		mainWindow = createMenuBar.mainWindow;
-		spectrometer = mainWindow.spectrometer;
+    /**
+     * Constructs the Measurement menu with its menu items.
+     * 
+     * @param createMenuBar the parent menu bar
+     */
+    public CreateMeasurementMenu(CreateMenuBar createMenuBar) {
+        super("Measurement");
+        this.createMenuBar = createMenuBar;
+        mainWindow = createMenuBar.mainWindow;
+        spectrometer = mainWindow.spectrometer;
 
-		JMenuItem connectItem = new JMenuItem("Connect");
+        JMenuItem connectItem = new JMenuItem("Connect");
         configureItem = new JMenuItem("Configure");
         measureItem = new JMenuItem("Measure");
         
@@ -39,46 +61,53 @@ public class CreateMeasurementMenu extends JMenu {
         addSeparator();
         add(configureItem);
         add(measureItem);
-	}
+    }
 
-	    /**
-     * Connects to the spectrometer.
+    /**
+     * Connects to the spectrometer in a background thread.
+     * 
+     * @param configureItem menu item to enable on successful connection
+     * @param measureItem menu item to enable on successful connection
      */
     private void connectToSpectrometer(JMenuItem configureItem, JMenuItem measureItem) {
-    // 1. Set wait cursor
-    mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        // 1. Set wait cursor
+        mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-    SwingWorker<Spectrometer, Void> worker = new SwingWorker<>() {
-        @Override
-        protected Spectrometer doInBackground() throws Exception {
-            return new Spectrometer(() -> {
-                // This runs when disconnected
-                SwingUtilities.invokeLater(() -> handleDisconnect());
-            });
-        }
-
-        @Override
-        protected void done() {
-            try {
-                // 2. Retrieve the created spectrometer
-                spectrometer = get(); 
-                mainWindow.setCursor(Cursor.getDefaultCursor());
-                DialogUtils.showInfoDialog(mainWindow, "Connection successful", 
-                    "Connected to " + spectrometer.getPortName());
-                
-                configureItem.setEnabled(true);
-                measureItem.setEnabled(true);
-            } catch (Exception ex) {
-                spectrometer = null;
-                mainWindow.setCursor(Cursor.getDefaultCursor());
-                DialogUtils.handleError(mainWindow, "Connection error", ex);
+        SwingWorker<Spectrometer, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Spectrometer doInBackground() throws Exception {
+                return new Spectrometer(() -> {
+                    // This runs when disconnected
+                    SwingUtilities.invokeLater(() -> handleDisconnect());
+                });
             }
-        }
-    };
 
-    worker.execute();
-}
+            @Override
+            protected void done() {
+                try {
+                    // 2. Retrieve the created spectrometer
+                    spectrometer = get(); 
+                    mainWindow.setCursor(Cursor.getDefaultCursor());
+                    DialogUtils.showInfoDialog(mainWindow, "Connection successful", 
+                        "Connected to " + spectrometer.getPortName());
+                    
+                    configureItem.setEnabled(true);
+                    measureItem.setEnabled(true);
+                } catch (Exception ex) {
+                    spectrometer = null;
+                    mainWindow.setCursor(Cursor.getDefaultCursor());
+                    DialogUtils.handleError(mainWindow, "Connection error", ex);
+                }
+            }
+        };
 
+        worker.execute();
+    }
+
+    /**
+     * Handles disconnection events from the spectrometer.
+     * Disables configuration and measurement menu items.
+     */
     private void handleDisconnect() {
         spectrometer = null;
 
@@ -92,7 +121,7 @@ public class CreateMeasurementMenu extends JMenu {
         measureItem.setEnabled(false);
     }
 
-        /**
+    /**
      * Opens the configuration dialog for spectrometer settings.
      */
     private void configureSpectrometer() {
@@ -108,9 +137,10 @@ public class CreateMeasurementMenu extends JMenu {
         }
     }
 
-
     /**
      * Applies configuration parameters to the spectrometer.
+     * 
+     * @param params map containing int, gain, avg, count, mode, light values
      */
     private void applyConfiguration(Map<String, Object> params) {
         int integrationTime = (int) params.get("int");
@@ -127,8 +157,8 @@ public class CreateMeasurementMenu extends JMenu {
     
     /**
      * Performs a measurement with current spectrometer settings.
+     * Prompts for a measurement name and runs the acquisition in a background thread.
      */
-    
     private void performMeasurement() {
         if (!checkConnection()) return;
 
@@ -174,6 +204,8 @@ public class CreateMeasurementMenu extends JMenu {
     
     /**
      * Checks if spectrometer is connected.
+     * 
+     * @return true if connected, false otherwise (displays error dialog)
      */
     private boolean checkConnection() {
         if (spectrometer == null) {

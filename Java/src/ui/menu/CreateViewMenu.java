@@ -12,16 +12,33 @@ import core.*;
 import ui.dialog.*;
 import ui.MainWindow;
 
+/**
+ * View menu providing spectrum and absorption plot visualization.
+ * Allows customization of plot appearance including bar/curve type,
+ * normalization, error bars, and axis selection.
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
+ */
 public class CreateViewMenu extends JMenu {
-	private CreateMenuBar createMenuBar;
-	private MainWindow mainWindow;
+    
+    /** Reference to the parent menu bar. */
+    private CreateMenuBar createMenuBar;
+    
+    /** Reference to the main window. */
+    private MainWindow mainWindow;
 
-	public CreateViewMenu(CreateMenuBar createMenuBar) {
-		super("View");
-		this.createMenuBar = createMenuBar;
-		this.mainWindow = createMenuBar.mainWindow;
+    /**
+     * Constructs the View menu with its menu items.
+     * 
+     * @param createMenuBar the parent menu bar
+     */
+    public CreateViewMenu(CreateMenuBar createMenuBar) {
+        super("View");
+        this.createMenuBar = createMenuBar;
+        this.mainWindow = createMenuBar.mainWindow;
 
-		JMenuItem spectrumItem = new JMenuItem("Spectrum");
+        JMenuItem spectrumItem = new JMenuItem("Spectrum");
         JMenuItem absorptionItem = new JMenuItem("Absorption");
         
         spectrumItem.addActionListener(e -> showSpectrumPlot());
@@ -29,21 +46,22 @@ public class CreateViewMenu extends JMenu {
         
         add(spectrumItem);
         add(absorptionItem);
-	}
+    }
 
-	    /**
+    /**
      * Shows spectrum plot for selected measurement.
+     * Displays a configuration dialog before generating the plot.
      */
     private void showSpectrumPlot() {
         String name = mainWindow.measurementList.getSelectedValue();
         if (name == null) {
-            DialogUtils.showErrorDialog(mainWindow,"Error", "No measurement selected.");
+            DialogUtils.showErrorDialog(mainWindow, "Error", "No measurement selected.");
             return;
         }
 
         MeasurementSet set = mainWindow.measurementSets.get(name);
         if (set == null) {
-            DialogUtils.showErrorDialog(mainWindow,"Error", "No data available for the selected measurement.");
+            DialogUtils.showErrorDialog(mainWindow, "Error", "No data available for the selected measurement.");
             return;
         }
 
@@ -67,13 +85,12 @@ public class CreateViewMenu extends JMenu {
             XYChart chart = vis.createCurveChart();
             displayChart(chart);
         }
-
     }
 
     /**
-     * Shows absorption plot comparing reference and sample.
+     * Shows absorption plot comparing reference and sample measurements.
+     * Requires at least two measurements to be available.
      */
-    
     private void showAbsorptionPlot() {
         List<String> names = new ArrayList<>();
         for (int i = 0; i < mainWindow.measurementListModel.size(); i++) {
@@ -81,7 +98,7 @@ public class CreateViewMenu extends JMenu {
         }
 
         if (names.size() < 2) {
-            DialogUtils.showErrorDialog(mainWindow,"Error", "Need at least two measurements (reference and sample).");
+            DialogUtils.showErrorDialog(mainWindow, "Error", "Need at least two measurements (reference and sample).");
             return;
         }
 
@@ -111,23 +128,29 @@ public class CreateViewMenu extends JMenu {
     
     /**
      * Validates absorption plot selections.
+     * 
+     * @param refName the selected reference measurement name
+     * @param sampleName the selected sample measurement name
+     * @return true if selections are valid, false otherwise
      */
     private boolean validateAbsorptionSelection(String refName, String sampleName) {
         if (refName == null || sampleName == null || refName.equals(sampleName)) {
-            DialogUtils.showErrorDialog(mainWindow,"Error", "Please choose two different measurements.");
+            DialogUtils.showErrorDialog(mainWindow, "Error", "Please choose two different measurements.");
             return false;
         }
         
         if (!mainWindow.measurementSets.containsKey(refName) || !mainWindow.measurementSets.containsKey(sampleName)) {
-            DialogUtils.showErrorDialog(mainWindow,"Error", "Selected measurements are not available.");
+            DialogUtils.showErrorDialog(mainWindow, "Error", "Selected measurements are not available.");
             return false;
         }
         
         return true;
     }
-	    
+    
     /**
-     * Displays a chart in the center panel.
+     * Displays an XY chart in the center panel.
+     * 
+     * @param chart the XYChart to display
      */
     private void displayChart(XYChart chart) {
         mainWindow.centerPanel.removeAll();
@@ -136,6 +159,11 @@ public class CreateViewMenu extends JMenu {
         mainWindow.centerPanel.repaint();
     }
 
+    /**
+     * Displays a category (bar) chart in the center panel.
+     * 
+     * @param chart the CategoryChart to display
+     */
     private void displayChart(CategoryChart chart) {
         mainWindow.centerPanel.removeAll();
         mainWindow.centerPanel.add(new XChartPanel<>(chart), BorderLayout.CENTER);
@@ -143,4 +171,3 @@ public class CreateViewMenu extends JMenu {
         mainWindow.centerPanel.repaint();
     }
 }
-

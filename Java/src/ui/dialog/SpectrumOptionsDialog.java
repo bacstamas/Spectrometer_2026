@@ -5,21 +5,37 @@ import java.awt.*;
 
 /**
  * Dialog for configuring spectrum plot options.
- * Allows selection of plot type, normalization, error bars, and axis type.
+ * Allows selection of plot type (bar/curve), normalization,
+ * error bars display, and axis type (wavelength/frequency).
+ * 
+ * @author Spectrometer Control Software
+ * @version 1.0
  */
 public class SpectrumOptionsDialog extends JDialog {
 
     // ==================== UI COMPONENTS ====================
     
+    /** Radio button for bar plot type. */
     private JRadioButton barButton;
+    
+    /** Radio button for curve plot type. */
     private JRadioButton curveButton;
+    
+    /** Checkbox for normalization to maximum. */
     private JCheckBox normalizeBox;
+    
+    /** Checkbox for showing error bars. */
     private JCheckBox errorBarsBox;
+    
+    /** Radio button for wavelength axis (nm). */
     private JRadioButton wavelengthButton;
+    
+    /** Radio button for frequency axis (THz). */
     private JRadioButton frequencyButton;
     
     // ==================== STATE ====================
     
+    /** Whether the user confirmed the dialog (clicked OK). */
     private boolean confirmed = false;
     
     // ==================== CONSTANTS ====================
@@ -32,6 +48,7 @@ public class SpectrumOptionsDialog extends JDialog {
 
     /**
      * Constructs the spectrum options dialog.
+     * 
      * @param parent Parent frame
      */
     public SpectrumOptionsDialog(JFrame parent) {
@@ -59,6 +76,8 @@ public class SpectrumOptionsDialog extends JDialog {
 
     /**
      * Creates the panel with all plot options.
+     * 
+     * @return configured JPanel
      */
     private JPanel createOptionsPanel() {
         JPanel panel = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, 4, 4));
@@ -74,6 +93,8 @@ public class SpectrumOptionsDialog extends JDialog {
 
     /**
      * Creates panel for plot type selection (bar/curve).
+     * 
+     * @return configured JPanel
      */
     private JPanel createPlotTypePanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -94,6 +115,8 @@ public class SpectrumOptionsDialog extends JDialog {
 
     /**
      * Creates panel for normalization option.
+     * 
+     * @return configured JPanel
      */
     private JPanel createNormalizePanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -104,6 +127,8 @@ public class SpectrumOptionsDialog extends JDialog {
 
     /**
      * Creates panel for error bars option.
+     * 
+     * @return configured JPanel
      */
     private JPanel createErrorBarsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -113,7 +138,9 @@ public class SpectrumOptionsDialog extends JDialog {
     }
 
     /**
-     * Creates panel for axis type selection (wavelength/frequency).
+     * Creates panel for axis type selection (wavelength vs frequency).
+     * 
+     * @return configured JPanel
      */
     private JPanel createAxisPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -136,6 +163,8 @@ public class SpectrumOptionsDialog extends JDialog {
 
     /**
      * Creates the button panel with OK and Cancel.
+     * 
+     * @return configured JPanel with buttons
      */
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -162,35 +191,45 @@ public class SpectrumOptionsDialog extends JDialog {
     // ==================== GETTERS ====================
 
     /**
-     * @return true if user confirmed (clicked OK)
+     * Returns whether the user confirmed the dialog (clicked OK).
+     * 
+     * @return true if OK was clicked, false otherwise
      */
     public boolean isConfirmed() {
         return confirmed;
     }
 
     /**
-     * @return Selected plot type ("bar" or "curve")
+     * Returns the selected plot type.
+     * 
+     * @return "bar" for bar chart, "curve" for curve chart
      */
     public String getPlotType() {
         return barButton.isSelected() ? "bar" : "curve";
     }
 
     /**
-     * @return true if normalization should be applied
+     * Returns whether normalization should be applied.
+     * 
+     * @return true to normalize data to maximum, false otherwise
      */
     public boolean isNormalize() {
         return normalizeBox.isSelected();
     }
 
     /**
-     * @return true if error bars should be shown
+     * Returns whether error bars should be shown.
+     * 
+     * @return true to show error bars, false otherwise
      */
     public boolean isShowErrorBars() {
         return errorBarsBox.isSelected();
     }
 
     /**
-     * @return true if wavelength axis should be used (false for frequency)
+     * Returns whether the wavelength axis should be used.
+     * 
+     * @return true for wavelength axis, false for frequency axis
      */
     public boolean isUseWavelength() {
         return wavelengthButton.isSelected();

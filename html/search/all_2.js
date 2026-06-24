@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['centerpanel_0',['centerPanel',['../classui_1_1MainWindow.html#a682408c8c797f3f9a99674c8882e2451',1,'ui::MainWindow']]],
+  ['clear_1',['clear',['../classcore_1_1MeasurementSet.html#a785f3a49dcbc48cb33ed438f6a29a676',1,'core::MeasurementSet']]],
+  ['close_2',['close',['../classcore_1_1Spectrometer.html#af1dd8eacff66cb9d79c27fce8e4bf30e',1,'core::Spectrometer']]],
+  ['configure_3',['configure',['../classcore_1_1Spectrometer.html#af211895acec4378795e483aed9641224',1,'core::Spectrometer']]],
+  ['configuredialog_4',['configuredialog',['../classui_1_1dialog_1_1ConfigureDialog.html',1,'ui.dialog.ConfigureDialog'],['../classui_1_1dialog_1_1ConfigureDialog.html#a8c47d03f8e13e715a8f266092654bed0',1,'ui.dialog.ConfigureDialog.ConfigureDialog()']]],
+  ['connectionlistener_5',['ConnectionListener',['../interfacecore_1_1Spectrometer_1_1ConnectionListener.html',1,'core::Spectrometer']]],
+  ['createabsorptionchart_6',['createAbsorptionChart',['../classcore_1_1Visualizer.html#a8b833b44431c21dd01bbb72e882a6283',1,'core::Visualizer']]],
+  ['createbarchart_7',['createBarChart',['../classcore_1_1Visualizer.html#a7978937ea21137cdb546c419e42bca91',1,'core::Visualizer']]],
+  ['createcenterpanel_8',['createcenterpanel',['../classui_1_1panel_1_1CreateCenterPanel.html',1,'ui.panel.CreateCenterPanel'],['../classui_1_1panel_1_1CreateCenterPanel.html#ad350d2e7e696c3f08586136219cd36d5',1,'ui.panel.CreateCenterPanel.CreateCenterPanel()']]],
+  ['createcurvechart_9',['createCurveChart',['../classcore_1_1Visualizer.html#a3f6ef50e18d32114c47faa7a6c5ec49f',1,'core::Visualizer']]],
+  ['createfilemenu_10',['createfilemenu',['../classui_1_1menu_1_1CreateFileMenu.html',1,'ui.menu.CreateFileMenu'],['../classui_1_1menu_1_1CreateFileMenu.html#aa6e16c9799289299bb2b6fd5d73d30f9',1,'ui.menu.CreateFileMenu.CreateFileMenu()']]],
+  ['createleftpanel_11',['createleftpanel',['../classui_1_1panel_1_1CreateLeftPanel.html',1,'ui.panel.CreateLeftPanel'],['../classui_1_1panel_1_1CreateLeftPanel.html#ac8bc2ab0957d54ebbfa4ee62560d6aa8',1,'ui.panel.CreateLeftPanel.CreateLeftPanel()']]],
+  ['createmeasurementmenu_12',['createmeasurementmenu',['../classui_1_1menu_1_1CreateMeasurementMenu.html',1,'ui.menu.CreateMeasurementMenu'],['../classui_1_1menu_1_1CreateMeasurementMenu.html#ad7edffe2e8ac6b21a1e70f618ce1ca95',1,'ui.menu.CreateMeasurementMenu.CreateMeasurementMenu()']]],
+  ['createmenubar_13',['createmenubar',['../classui_1_1menu_1_1CreateMenuBar.html',1,'ui.menu.CreateMenuBar'],['../classui_1_1menu_1_1CreateMenuBar.html#a2e3b97830f1650491d96cd183a1a986d',1,'ui.menu.CreateMenuBar.CreateMenuBar()']]],
+  ['createviewmenu_14',['createviewmenu',['../classui_1_1menu_1_1CreateViewMenu.html',1,'ui.menu.CreateViewMenu'],['../classui_1_1menu_1_1CreateViewMenu.html#a1d14e84fd88062881e7c131de60cdfe1',1,'ui.menu.CreateViewMenu.CreateViewMenu()']]],
+  ['curve_15',['CURVE',['../enumcore_1_1Visualizer_1_1PlotType.html#ac1710c7bedd82ba99082accc79b83e0d',1,'core::Visualizer::PlotType']]]
+];

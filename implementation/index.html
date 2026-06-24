@@ -1,0 +1,915 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../review/">
+      
+      
+        <link rel="next" href="../conclusion/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Design and Implementation of the Spectrophotometer - DIY Spectrometer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-and-implementation-of-the-spectrophotometer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="DIY Spectrometer Documentation" class="md-header__button md-logo" aria-label="DIY Spectrometer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DIY Spectrometer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design and Implementation of the Spectrophotometer
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DIY Spectrometer Documentation" class="md-nav__button md-logo" aria-label="DIY Spectrometer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DIY Spectrometer Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction and Objectives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theoretical Background
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Review of Low-Cost / DIY Spectrophotometers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design and Implementation of the Spectrophotometer
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design and Implementation of the Spectrophotometer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obstacles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obstacles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Software">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-processing-and-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Processing and Calibration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experimental-results-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental Results and Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experimental Results and Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stray-light-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stray Light Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproducibility-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducibility Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-stability-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-Term Stability Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calibration-curves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calibration Curves
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bibliography/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../JavaDocs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obstacles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obstacles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Software">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-processing-and-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Processing and Calibration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experimental-results-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental Results and Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experimental Results and Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stray-light-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stray Light Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproducibility-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducibility Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-stability-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-Term Stability Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calibration-curves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calibration Curves
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="design-and-implementation-of-the-spectrophotometer">Design and Implementation of the Spectrophotometer</h1>
+<h2 id="hardware">Hardware</h2>
+<h3 id="idea">Idea</h3>
+<p>The starting point for the hardware design was the desire to build a functional absorption spectrophotometer that was as simple and inexpensive as possible, while remaining open to future refinement and improvement. A key decision in this direction was the choice of the SparkFun <a href="https://cdn.sparkfun.com/assets/f/b/c/c/f/AS7262.pdf">AS7262</a> Visible Spectral Sensor as the core detection element. This sensor measures light intensity in six fixed channels across the visible spectrum, centered at 450, 500, 550, 570, 600, and 650 nm, and communicates digitally with a microcontroller via I2C. Its main advantage for this application is that it eliminates the need for a diffraction grating and a rotating wavelength selector entirely, the spectral discrimination is handled internally by the sensor itself. This greatly simplifies the optical layout and reduces the number of precision components required, at the cost of spectral resolution, since the instrument can only sample six discrete wavelengths rather than a continuous spectrum.</p>
+<p>As the microcontroller, an <a href="https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf">Arduino Uno</a> was chosen. This is a natural pairing with the AS7262 sensor, as the Arduino provides the I2C interface needed to communicate with it, can supply the sensor with power, and can transfer the acquired data to a PC via its USB connection. The Arduino Uno is also widely available, inexpensive, and well documented, making it a suitable platform for an educational instrument.</p>
+<p>For the light source, an incandescent bulb was preferred over an LED. While LEDs are cheaper and more energy efficient, their emission spectrum is strongly peaked at specific wavelengths, which can result in uneven illumination across the six detection channels of the sensor. An incandescent bulb, by contrast, emits a broad and relatively smooth blackbody-like spectrum across the entire visible range, providing more uniform illumination of all channels. The chosen bulb is a Goobay product with an E10 socket, rated at 3.5 V and 0.2 A, giving a power consumption of 0.7 W. This low current draw is important, as the 5V power pin of the Arduino Uno can supply a limited current, and exceeding it risks damaging the board.</p>
+<p>The optical layout follows a straightforward single-beam transmission configuration. Light from the bulb passes through a vertical slit, which collimates it into a narrow beam. This beam then passes through the cuvette, which holds the sample solution. A second slit placed after the cuvette further restricts the beam before it reaches the AS7262 sensor. Standard commercial cuvettes with a 10×10 mm inner cross section and 1 cm path length were used, consistent with the standard path length assumed in Beer-Lambert law calculations. The structural frame holding all of these components together was designed in 3D modeling software and printed using a high-precision 3D printer with PLA filament, resulting in a compact enclosure slightly smaller than a 6×10×25 cm block.</p>
+<h3 id="obstacles">Obstacles</h3>
+<p>he development of the hardware went through two main iterations, driven by a series of practical problems encountered during testing.</p>
+<p>The first version of the frame was modular in design, meaning that the positions of the light source, the slits, and the sensor could be adjusted along the optical axis. This was useful in the early stages of development, as it allowed the optimal spacing between components to be found experimentally. However, this first version had no cover or enclosure around the optical path, meaning that ambient light from the room could reach the sensor and contaminate the measurements. As a result, all measurements with this version had to be performed in a darkened room, which was clearly impractical for regular use.</p>
+<p>A further issue that emerged during testing was the need to control the intensity of the light source. The AS7262 sensor has a fixed integration time and gain setting for each measurement, and if the light reaching it is too intense, the sensor saturates and the readings become unreliable. A way to reduce the light intensity without modifying the optical layout was therefore needed.</p>
+<p>Finally, the PLA filament used for 3D printing presented an unexpected problem. The filament available was blue in color, and it turned out to be partially translucent to ambient light, allowing a non-negligible amount of stray light to penetrate the walls of the enclosure even in the second, closed version of the frame.</p>
+<h3 id="implementation">Implementation</h3>
+<p>The second version of the frame addressed the problems identified during testing with the first. All components (the light source, the two slits, the cuvette holder, and the sensor) were given fixed, precisely dimensioned positions inside a closed enclosure, based on the optimal spacing determined during the first phase. The enclosure included a removable cover to allow access to the cuvette holder for changing samples, while keeping the rest of the optical path shielded from ambient light. A dedicated bay was also added to securely mount the Arduino Uno board, positioned with the USB Type-B connector accessible from the outside of the enclosure, so that the connection to the PC could be made without opening the instrument. Crucially, the Arduino was physically separated from the optical components inside the box, so that the indicator LEDs on the board would not interfere with the sensor readings. The internal structure of the assembled spectrometer is shown in <strong>Figure 5</strong>. </p>
+<p><img alt="Spectrometer structure" src="/home/tomi/Desktop/Spectrometer_2026/Docs/Figures/box_inside.jpeg" /></p>
+<p><em><strong>Figure 5</strong>: Photo of the inside of the spectrometer.</em></p>
+<p>To solve the problem of stray light penetrating through the blue PLA walls, the exterior and interior surfaces of the enclosure were painted with a matte black paint of the type used industrially to produce surfaces with near-unity emissivity for thermal imaging applications. This paint effectively blocked the residual light transmission through the plastic walls and also minimized internal reflections within the enclosure.</p>
+<p>The light intensity control problem was solved by adding a <a href="https://share.google/5DOaTHuip5NTmbAFO">BD139</a> NPN bipolar transistor to the circuit. The transistor was wired with its collector connected to the Arduino's 5V supply pin, its emitter connected to the positive terminal of the light bulb, and the negative terminal of the bulb connected to the Arduino's ground. The base of the transistor was driven by pin 3 of the Arduino, which is a PWM-capable output. By varying the duty cycle of the PWM signal, the effective voltage across the bulb can be adjusted continuously, allowing the light intensity to be tuned to a level that keeps the sensor within its linear operating range without saturating it. This simple addition significantly improved the reliability and reproducibility of the measurements. See <strong>Figure 6</strong> for the circuit diagram.</p>
+<p><img alt="Spectrometer structure" src="/home/tomi/Desktop/Spectrometer_2026/Docs/Figures/circuit_design_1.png" /></p>
+<p><em><strong>Figure 6</strong>: Photo of the inside of the spectrometer.</em></p>
+<p>Several sub-components, including the sensor holder, the cuvette holder, and the box cover, went through additional minor refinements beyond the two main frame iterations, as small geometric adjustments were needed to improve the fit and reduce stray light leakage around the edges. The final assembled instrument is a compact, self-contained device that can be connected to any computer via a standard USB cable and operated without any need for a darkened environment.</p>
+<h2 id="software">Software</h2>
+<p>The software component of the spectrophotometer system consists of two separate programs: the firmware running on the Arduino microcontroller, which is responsible for directly operating the sensor and acquiring data, and a Java desktop application running on the PC, which serves as the interface between the user and the instrument. The two communicate through a serial connection over USB.</p>
+<p>The <strong>Arduino firmware</strong> is intentionally kept simple and lightweight. On startup, it initializes the AS7262 sensor and sets a default configuration for the measurement parameters. It then enters a waiting loop, listening for commands arriving through the serial port.</p>
+<p>When a measurement is requested, the command arrives as a formatted string specifying all relevant parameters: integration time, gain, number of averages, measurement mode, and light intensity. The firmware parses this string, applies the specified settings to the sensor, and adjusts the PWM signal on pin 3 to set the light source intensity accordingly. It then performs the measurement the requested number of times and computes the average across repetitions for each of the six spectral channels. The result is sent back to the PC as a single comma-separated line of six floating point values, one per channel.</p>
+<p>The AS7262 sensor library supports two measurement modes: a raw mode, which returns the unprocessed digital counts from each photodetector channel, and a calibrated mode, which applies internal corrections to return values in units of calibrated irradiance. Both modes are accessible through the firmware and can be selected by the user from the PC software.</p>
+<p>The <strong>PC-side software</strong> is written in Java, a choice motivated by several practical considerations. Java is inherently cross-platform, the same application can run on Linux, Windows, and macOS without significant modification, and it lends itself naturally to well-structured, object-oriented design that can be extended and maintained over time. The application was developed and tested on Linux but is intended to be portable across operating systems. It uses the <em>jSerialComm</em> library for serial port communication, the <em>XChart</em> library for data visualization and the <em>Jackson</em> library for handling JSON files.</p>
+<p>The architecture of the application is organized around a small set of well-defined classes, each with a clear responsibility. This separation of concerns makes the codebase easy to navigate and extend without requiring a complete redesign.</p>
+<h3 id="structure">Structure</h3>
+<p>The <em>Spectrometer</em> class is the core of the application. It is responsible for all communication with the Arduino hardware. On instantiation, it automatically scans the available serial ports on the system (using the <em>jSerialComm</em> library) and identifies the connected Arduino by checking port descriptors and system names. Once connected, it configures the serial port parameters (baud rate, data bits, stop bits, parity) opens the connection, and flushes any startup messages sent by the Arduino. It exposes methods to configure the measurement parameters and to trigger measurements, handling the sending of the formatted command string and the reception and parsing of the response. Each call to the measurement method can request multiple spectra in sequence, each acquired with on-board averaging by the Arduino.</p>
+<p>The <em>MeasurementSet</em> class acts as a container for all data associated with a single acquisition session. It stores the list of individual spectra recorded during that session, the full set of measurement parameters used, and a unique name composed of a user-defined label and the date and time of acquisition. It provides methods for computing the mean and standard deviation across the recorded spectra for each channel, for formatting this information as a readable string, and for saving the entire measurement set to a JSON file or loading it back from one. JSON format was chosen because it is human-readable and easy to handle.</p>
+<p>The <em>Visualizer</em> class handles all data visualization. It takes a <em>MeasurementSet</em> as input and can produce two types of charts: a spectrum plot showing the intensity values across the six channels of the sensor, and an absorption spectrum computed from two separate measurement sets representing the reference and the sample. The absorbance at each channel is calculated according to the Beer-Lambert law as:</p>
+<div class="arithmatex">\[A=-\log_{10} \left(\frac{I_{sample}}{I_{reference}}\right)\]</div>
+<p>where <span class="arithmatex">\(I_{sample}\)</span> and <span class="arithmatex">\(I_{reference}\)</span> are the mean intensities of the sample and reference measurements at each channel respectively. The <em>Visualizer</em> class uses the <em>XChart</em> library to produce the actual chart objects, which are then embedded in the GUI.</p>
+<p>The remaining classes handle the graphical user interface. The <em>Main</em> class serves as the application entry point, launching the GUI on the appropriate thread. The <em>MainWindow</em> class implements the main application window, while the remaining classes manage the panels, menus, and dialogs, and handle specific user interactions.</p>
+<h3 id="features">Features</h3>
+<p>The main window of the application is organized around a central list that displays all measurement sets currently loaded in memory, each identified by its unique name. From the main window, the user can connect to the spectrometer and configure the measurement parameters through a dedicated dialog, which provides input fields for integration time, gain, number of averages, number of measurements, measurement mode, and light intensity. Once configured, a measurement can be triggered with a single button press. The acquired measurement set is automatically added to the list and displayed in a text area showing its parameters and statistics.</p>
+<p>Measurement sets can be saved to and loaded from plain text files, allowing results to be stored for later analysis or shared between sessions. The user can also load previously saved measurements without connecting to the hardware, making it possible to perform data analysis and visualization independently of the instrument.</p>
+<p>For visualization, two separate plot types are available. The spectrum plot displays the raw or calibrated intensity values across the six sensor channels for a selected measurement set, while the absorption plot computes and displays the absorbance spectrum from a user-selected reference and sample pair. Both plot types offer configurable options accessible through dialog windows: the x-axis can be displayed in wavelength (nm) or in frequency (THz), the y-axis values can be shown as raw values or normalized to the maximum, the plot style can be switched between a line curve and a bar chart, and error bars representing the standard deviation across repeated measurements can be toggled on or off.</p>
+<h3 id="data-processing-and-calibration">Data Processing and Calibration</h3>
+<p>The data processing performed by the software is deliberately straightforward, reflecting the educational purpose of the instrument. The primary computation is the averaging of repeated spectra, which is handled partly by the Arduino firmware, which averages multiple sensor readings within a single acquisition, and partly by the <em>MeasurementSet</em> class, which computes the mean and standard deviation across multiple sequential acquisitions requested by the user. This two-level averaging scheme gives the user flexibility in balancing measurement speed against statistical reliability.</p>
+<p>The absorbance calculation follows directly from the Beer-Lambert law, as described above. No additional baseline correction or spectral smoothing is applied, keeping the processing chain transparent and easy to follow.</p>
+<h2 id="experimental-results-and-validation">Experimental Results and Validation</h2>
+<p>With the hardware and software components completed, a series of experiments was carried out to characterize the performance of the instrument and to validate its suitability for quantitative absorbance measurements.</p>
+<h3 id="stray-light-test">Stray Light Test</h3>
+<p>The first test performed was aimed at verifying that the closed enclosure of the spectrophotometer effectively excludes ambient light. An empty cuvette was placed in the cuvette holder, the cover of the box was closed, and the light source intensity was set to 0, meaning the bulb was switched off via the PWM control. Under these conditions, repeated measurements returned a value of exactly zero on each of the six channels of the sensor. This result confirms that no stray or ambient light reaches the detector when the light source is off, validating the effectiveness of the matte black coating applied to the interior of the enclosure and ruling out the presence of any light leaks through the housing.</p>
+<h3 id="reproducibility-test">Reproducibility Test</h3>
+<p>To assess the reproducibility of the measurements, a solution of yellow food coloring at a concentration of <span class="arithmatex">\(2.5\%\)</span> was prepared and measured repeatedly. Ten independent measurement sets were acquired, each consisting of 100 individual measurements per channel (integration time: 100 ms, gain: 16, averaging: 1, mode: raw, light intensity: 100). All ten sets were plotted together, as shown in <strong>Figure 7</strong>, where each of the six channels is represented by ten overlapping traces of 100 points each.</p>
+<p><img alt="Spectrometer structure" src="/home/tomi/Desktop/Spectrometer_2026/Docs/Figures/Reproductibility_plot.png" /></p>
+<p><em><strong>Figure 7</strong>: Raw measurement values recorded across the six channels of the AS7262 sensor (450, 500, 550, 570, 600, and 650 nm) for ten independently acquired measurement sets of a <span class="arithmatex">\(2.5\%\)</span> yellow food coloring solution, each consisting of 100 individual measurements.</em></p>
+<p>The plot shows that the measured values remain clustered around a stable baseline for each channel, with some random scatter present throughout the dataset. Averaging across all 1000 individual measurements per channel (10 sets × 100 measurements), the mean raw values obtained were <em>{3.99, 14.251, 33.428, 50.629, 11.336, 24.334}</em> for the <em>450, 500, 550, 570, 600</em> and <em>650</em> nm channels respectively, with corresponding standard deviations of <em>{0.099, 0.522, 1.101, 2.004, 0.501, 0.696}</em>. The relative standard deviation remains below approximately <span class="arithmatex">\(4\%\)</span> for every channel, which indicates a satisfactory level of reproducibility for an instrument of this cost and complexity. This noise may be attributable to small imperfections such as scratches on the cuvette surface and slight variations in its exact positioning within the holder between insertions.</p>
+<h3 id="long-term-stability-test">Long-Term Stability Test</h3>
+<p>A further test was conducted to check whether the solution itself remained stable over time, an important consideration since sedimentation or settling of the food coloring could introduce a systematic drift in absorbance unrelated to the instrument's performance. The same yellow food coloring solution and the same measurement parameters used in the reproducibility test were employed. A cuvette containing the solution was measured once, left undisturbed inside the instrument for 24 hours, and then measured again without being touched or repositioned in between. The difference between the two measurements was found to be smaller than the standard deviations already observed in the reproducibility test, indicating that no significant settling or degradation of the solution occurred over this timescale, and that any short-term drift in the instrument's readings is dominated by the handling-related noise identified above rather than by sample instability.</p>
+<h3 id="calibration-curves">Calibration Curves</h3>
+<p>Finally, the linearity of the instrument's response was tested by preparing a series of yellow food coloring solutions at concentrations ranging from <span class="arithmatex">\(0.8\%\)</span> to <span class="arithmatex">\(10\%\)</span>, and measuring the absorbance of each at all six sensor channels. The resulting calibration curves are shown in <strong>Figure 8</strong> (one subplot for each channel) together with a linear best-fit line.</p>
+<p><img alt="Spectrometer structure" src="/home/tomi/Desktop/Spectrometer_2026/Docs/Figures/Calibration_curves.png" /></p>
+<p><em><strong>Figure 8</strong>: Six calibration curves showing absorbance against concentration (<span class="arithmatex">\(\%\)</span>), along with their corresponding best-fit lines, at each of the sensor's wavelengths.</em></p>
+<p>Across all six channels, the measured absorbance values follow the linear trend predicted by the Beer-Lambert law reasonably well, particularly in the central concentration range. Some scatter around the fitted line is visible, which is consistent with the absolute measurement noise identified in the reproducibility test. The channels at <em>550, 570</em> and <em>600</em> nm, which are closer to the absorption maximum of the yellow dye, display the clearest linear behavior and the largest overall absorbance range, while the <em>450</em> nm channel, which lies further from the absorption peak, shows comparatively more scatter relative to its smaller dynamic range. Overall, these results confirm that the constructed instrument is capable of producing calibration curves with a clearly recognizable linear character across the entire visible range covered by the sensor, supporting its intended use for quantitative concentration measurements in an educational context.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.sections", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

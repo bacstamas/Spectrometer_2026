@@ -1,0 +1,270 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FEFEFE
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor #333333
+}
+
+' ===== PACKAGE STYLES =====
+skinparam package {
+    BackgroundColor #F0F0F0
+    BorderColor #666666
+    FontColor #333333
+    FontStyle bold
+}
+
+' ===== DEFAULT PACKAGE (Main.java) =====
+'package "default" #FFCCBC {
+    
+    class Main {
+        + {static} main(String[]): void
+    }
+'}
+
+' ===== CORE PACKAGE =====
+package "core" #E3F2FD {
+    
+    class MeasurementSet {
+        - measurements: List<double[]>
+        - parameters: Map<String,Object>
+        - name: String
+        - {static} EXPECTED_CHANNELS: int = 6
+        - {static} WAVELENGTHS: String[]
+        + MeasurementSet()
+        + addMeasurement(double[]): void
+        + getMeasurements(): List<double[]>
+        + getAverageAndStd(): StatisticsResult
+        + getStatisticsString(): String
+        + saveToFile(String): void
+        + {static} loadFromFile(String): MeasurementSet
+        + toString(): String
+        + setName(String): void
+        + getName(): String
+        + setParameters(Map<String,Object>): void
+        + clear(): void
+        + isEmpty(): boolean
+        + size(): int
+    }
+    
+    class StatisticsResult {
+        + mean: double[]
+        + std: double[]
+        + StatisticsResult(double[], double[])
+    }
+    
+    class Spectrometer {
+        - port: SerialPort
+        - portName: String
+        - integrationTime: int = 50
+        - gain: int = 16
+        - avg: int = 1
+        - mode: String = "cal"
+        - numberOfMeasurements: int = 1
+        - lightInt: int = 50
+        - measurementSet: MeasurementSet
+        - connectionListener: ConnectionListener
+        - disconnected: boolean
+        + Spectrometer(ConnectionListener)
+        + configure(int,int,int,String,int,int): void
+        + measure(String): void
+        + getMeasurementSet(): MeasurementSet
+        + getPortName(): String
+        + close(): void
+    }
+    
+    interface ConnectionListener {
+        + onDisconnected(): void
+    }
+    
+    class Visualizer {
+        - measurementSet: MeasurementSet
+        - plotType: PlotType
+        - normalize: boolean
+        - showErrorBars: boolean
+        - axisType: AxisType
+        - wavelengthsNm: double[]
+        - frequenciesTHz: double[]
+        - {static} SPEED_OF_LIGHT: double = 299792458.0
+        - {static} CHANNEL_LABELS: String[]
+        + Visualizer(MeasurementSet)
+        + setPlotType(String): void
+        + setPlotType(PlotType): void
+        + setNormalize(boolean): void
+        + setShowErrorBars(boolean): void
+        + setAxisType(AxisType): void
+        + useWavelengthAxis(boolean): void
+        + createBarChart(): CategoryChart
+        + createCurveChart(): XYChart
+        + createAbsorptionChart(MeasurementSet,MeasurementSet): XYChart
+    }
+    
+    class PlotData {
+        - labels: List<String>
+        - xValues: List<Double>
+        - yValues: List<Double>
+        - errorValues: List<Double>
+    }
+    
+    enum PlotType {
+        BAR
+        CURVE
+    }
+    
+    enum AxisType {
+        WAVELENGTH
+        FREQUENCY
+    }
+}
+
+' ===== UI PACKAGE =====
+package "ui" #C8E6C9 {
+    
+    class MainWindow {
+        + measurementListModel: DefaultListModel<String>
+        + measurementList: JList<String>
+        + menuBar: CreateMenuBar
+        + leftPanel: CreateLeftPanel
+        + centerPanel: CreateCenterPanel
+        + spectrometer: Spectrometer
+        + measurementSets: Map<String,MeasurementSet>
+        + {static} LEFT_PANEL_WIDTH: int = 250
+        + MainWindow()
+    }
+}
+
+' ===== UI.DIALOG PACKAGE =====
+package "ui.dialog" #FFF3E0 {
+    
+    class AbsorptionOptionsDialog {
+        - referenceBox: JComboBox
+        - sampleBox: JComboBox
+        - wavelengthButton: JRadioButton
+        - frequencyButton: JRadioButton
+        - confirmed: boolean
+        + AbsorptionOptionsDialog(JFrame,List<String>)
+        + isConfirmed(): boolean
+        + getReferenceName(): String
+        + getSampleName(): String
+        + isUseWavelength(): boolean
+    }
+    
+    class ConfigureDialog {
+        - intField: JTextField
+        - avgField: JTextField
+        - countField: JTextField
+        - gainBox: JComboBox<Integer>
+        - modeBox: JComboBox<String>
+        - lightSpinner: JSpinner
+        - confirmed: boolean
+        + ConfigureDialog(JFrame,Map<String,Object>)
+        + isConfirmed(): boolean
+        + getParameters(): Map<String,Object>
+    }
+    
+    class DialogUtils {
+        + {static} showErrorDialog(JFrame,String,String): void
+        + {static} showInfoDialog(JFrame,String,String): void
+        + {static} handleError(JFrame,String,Exception): void
+    }
+    
+    class SpectrumOptionsDialog {
+        - barButton: JRadioButton
+        - curveButton: JRadioButton
+        - normalizeBox: JCheckBox
+        - errorBarsBox: JCheckBox
+        - wavelengthButton: JRadioButton
+        - frequencyButton: JRadioButton
+        - confirmed: boolean
+        + SpectrumOptionsDialog(JFrame)
+        + isConfirmed(): boolean
+        + getPlotType(): String
+        + isNormalize(): boolean
+        + isShowErrorBars(): boolean
+        + isUseWavelength(): boolean
+    }
+}
+
+' ===== UI.MENU PACKAGE =====
+package "ui.menu" #F3E5F5 {
+    
+    class CreateMenuBar {
+        + mainWindow: MainWindow
+        + CreateMenuBar(MainWindow)
+    }
+    
+    class CreateFileMenu {
+        + CreateFileMenu(CreateMenuBar)
+    }
+    
+    class CreateMeasurementMenu {
+        + CreateMeasurementMenu(CreateMenuBar)
+    }
+    
+    class CreateViewMenu {
+        + CreateViewMenu(CreateMenuBar)
+    }
+}
+
+' ===== UI.PANEL PACKAGE =====
+package "ui.panel" #E0F2F1 {
+    
+    class CreateCenterPanel {
+        + mainWindow: MainWindow
+        + CreateCenterPanel(MainWindow)
+    }
+    
+    class CreateLeftPanel {
+        + mainWindow: MainWindow
+        + CreateLeftPanel(MainWindow)
+    }
+}
+
+' ===== RELATIONSHIPS =====
+
+' Core internal relationships
+MeasurementSet *-- StatisticsResult : "contains"
+Spectrometer o-- MeasurementSet : "manages"
+Spectrometer ..> ConnectionListener : "realizes"
+Visualizer --> MeasurementSet : "uses"
+Visualizer *-- PlotData : "creates"
+Visualizer ..> PlotType : "uses"
+Visualizer ..> AxisType : "uses"
+
+' UI to Core relationships
+MainWindow --> Spectrometer : "holds"
+MainWindow --> MeasurementSet : "contains"
+MainWindow *-- CreateMenuBar
+MainWindow *-- CreateLeftPanel
+MainWindow *-- CreateCenterPanel
+
+' Menu composition (whole-part)
+CreateMenuBar *-- CreateFileMenu
+CreateMenuBar *-- CreateMeasurementMenu
+CreateMenuBar *-- CreateViewMenu
+
+' Menu dependencies
+CreateFileMenu ..> MeasurementSet : "uses"
+CreateFileMenu ..> DialogUtils : "uses"
+CreateMeasurementMenu ..> Spectrometer : "uses"
+CreateMeasurementMenu ..> ConfigureDialog : "uses"
+CreateMeasurementMenu ..> DialogUtils : "uses"
+CreateViewMenu ..> Visualizer : "uses"
+CreateViewMenu ..> SpectrumOptionsDialog : "uses"
+CreateViewMenu ..> AbsorptionOptionsDialog : "uses"
+
+' Panel dependencies
+CreateLeftPanel ..> MeasurementSet : "uses"
+CreateLeftPanel ..> DialogUtils : "uses"
+
+' Dialog dependencies
+AbsorptionOptionsDialog --> MainWindow : "references"
+ConfigureDialog --> MainWindow : "references"
+SpectrumOptionsDialog --> MainWindow : "references"
+
+' Entry point
+Main ..> MainWindow : "creates"
+
+@enduml

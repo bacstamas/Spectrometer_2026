@@ -1,0 +1,670 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../review/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Theoretical Background - DIY Spectrometer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#theoretical-background" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="DIY Spectrometer Documentation" class="md-header__button md-logo" aria-label="DIY Spectrometer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DIY Spectrometer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Theoretical Background
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DIY Spectrometer Documentation" class="md-nav__button md-logo" aria-label="DIY Spectrometer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DIY Spectrometer Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction and Objectives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theoretical Background
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theoretical Background
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spectroscopy-in-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spectroscopy in General
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#absorption-uvvis-spectroscopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Absorption (UV/Vis) Spectroscopy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Absorption (UV/Vis) Spectroscopy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#absorption-spectra-and-molecular-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Absorption Spectra and Molecular Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-and-operation-of-absorption-spectrometers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure and Operation of Absorption Spectrometers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Review of Low-Cost / DIY Spectrophotometers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design and Implementation of the Spectrophotometer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bibliography/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../JavaDocs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spectroscopy-in-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spectroscopy in General
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#absorption-uvvis-spectroscopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Absorption (UV/Vis) Spectroscopy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Absorption (UV/Vis) Spectroscopy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#absorption-spectra-and-molecular-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Absorption Spectra and Molecular Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-and-operation-of-absorption-spectrometers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure and Operation of Absorption Spectrometers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="theoretical-background">Theoretical Background</h1>
+<h2 id="spectroscopy-in-general">Spectroscopy in General</h2>
+<p>Spectroscopy is the branch of science concerned with the interaction between electromagnetic radiation and matter. When light encounters a substance, several things can happen: it may be transmitted, reflected, scattered, or absorbed, depending on the nature of the material and the wavelength of the radiation. Spectroscopy exploits these interactions to obtain information about the physical and chemical properties of substances <a href="../bibliography/#ref2">[2]</a>. Different regions of the electromagnetic spectrum give rise to different types of spectroscopic techniques. X-ray spectroscopy probes the inner electrons of atoms, infrared spectroscopy reveals molecular vibrations, and UV-visible spectroscopy, which is the focus of this work, involves transitions between electronic energy levels <a href="../bibliography/#ref1">[1]</a>. As shown in <strong>Figure 1</strong>, the visible spectrum occupies a narrow band of wavelengths, situated between the ultraviolet and infrared regions.</p>
+<p><img alt="Frequency spectrum" src="../Figures/frequency_figure.png" />
+<em><strong>Figure 1</strong>:The electromagnetic spectrum, showing the full range of radiation from cosmic rays to radio waves. The visible region, spanning approximately 380 to 780 nm, is highlighted with its characteristic color gradient. Both wavelength and frequency scales are shown</em></p>
+<p>The electromagnetic spectrum spans an enormous range of wavelengths and frequencies, from very short gamma rays at one extreme to long radio waves at the other. The UV-visible region occupies only a small portion of this spectrum, roughly from 190 nm to 800 nm, but it is particularly important because the energy of photons in this range corresponds to the energy differences between electronic states in many molecules. When a photon of the right energy strikes a molecule, it can be absorbed, promoting an electron from a lower energy level to a higher one. The wavelengths at which this absorption occurs are characteristic of the molecular structure, making UV-visible spectroscopy a powerful tool for both qualitative identification and quantitative analysis of chemical substances <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref2">[2]</a>.</p>
+<h2 id="absorption-uvvis-spectroscopy">Absorption (UV/Vis) Spectroscopy</h2>
+<p>The quantitative foundation of absorption spectrophotometry is the Beer-Lambert law, which describes the relationship between the concentration of an absorbing substance and the amount of light it absorbs. To understand it, consider a beam of monochromatic light passing through a solution of an absorbing compound held in a transparent container called a cuvette <a href="../bibliography/#ref10">[10]</a>. Some of the light will be absorbed by the molecules in solution, and the rest will be transmitted through to the detector.</p>
+<p>The transmittance <span class="arithmatex">\(T\)</span> of the solution is defined as the ratio of the transmitted light intensity I to the incident light intensity <span class="arithmatex">\(I_0\)</span>:</p>
+<div class="arithmatex">\[T=\frac{I}{I_0}\]</div>
+<p>Transmittance is often expressed as a percentage. However, for analytical purposes, it is more convenient to work with the absorbance <span class="arithmatex">\(A\)</span>, defined as the negative logarithm of the transmittance:</p>
+<div class="arithmatex">\[A=-\log_{10}(T)=\log_{10}\left(\frac{I_0}{I} \right)\]</div>
+<p>The Beer-Lambert law states that the absorbance is directly proportional to both the concentration of the absorbing species and the path length of the light through the sample:</p>
+<div class="arithmatex">\[A=\varepsilon\cdot l\cdot c\]</div>
+<p>where <span class="arithmatex">\(\varepsilon\)</span> is the molar absorptivity (also called the molar extinction coefficient), a constant characteristic of the absorbing substance at a given wavelength, <span class="arithmatex">\(l\)</span> is the path length of the light through the sample, as illustrated by the cuvette width in <strong>Figure 2</strong> (1 cm in standard cuvettes), and <span class="arithmatex">\(c\)</span> is the concentration of the absorbing species. The molar absorptivity has units of <span class="arithmatex">\(\text{L mol}^{-1} \text{cm}^{-1}\)</span> and can vary enormously between different compounds and different wavelengths <a href="../bibliography/#ref1">[1]</a>.</p>
+<p><img alt="Beer-Lambert" src="../Figures/Beer-Lambert.svg" /></p>
+<p><em><strong>Figure 2</strong>: Schematic illustration of the Beer-Lambert law. A beam of incident light with intensity <span class="arithmatex">\(I_0\)</span> passes through a sample of path length <span class="arithmatex">\(l\)</span>, emerging with reduced intensity <span class="arithmatex">\(I\)</span> due to absorption by the medium.</em></p>
+<p>The Beer-Lambert law is the cornerstone of quantitative spectrophotometry. If the molar absorptivity of a substance is known, measuring the absorbance of a solution immediately gives its concentration. In practice, a calibration curve is constructed by plotting the absorbance of standard solutions against their known concentrations <a href="../bibliography/#ref10">[10]</a>, as shown in the right panel of <strong>Figure 3</strong>, allowing for the determination of unknown sample concentrations via linear interpolation. The law holds well at low to moderate concentrations, but deviations can occur at high concentrations, where interactions between molecules begin to affect the absorption behavior, or when the incident light is not truly monochromatic <a href="../bibliography/#ref1">[1]</a>.</p>
+<p><img alt="Calibration Curve" src="../Figures/calibration_curve.png" />
+<em><strong>Figure 3</strong>: Left: example absorption spectra of a colored solution at five different concentrations, illustrating the characteristic shape of an absorption band and the increase in absorbance with concentration. Right: absorbance as a function of concentration at six specific wavelengths, illustrating the linear relationship predicted by the Beer-Lambert law.</em></p>
+<h3 id="absorption-spectra-and-molecular-structure">Absorption Spectra and Molecular Structure</h3>
+<p>When the absorbance of a substance is measured not just at a single wavelength but across a range of wavelengths, the result is an absorption spectrum (a plot of absorbance as a function of wavelength). Each substance has a characteristic absorption spectrum that reflects its molecular structure, specifically the energies of its electronic transitions. The wavelength at which the absorbance reaches its maximum is called <span class="arithmatex">\(\lambda_{max}\)</span>, and quantitative measurements are most sensitive at this wavelength, since small changes in concentration cause the largest changes in absorbance <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref10">[10]</a>.</p>
+<p>The shape and position of absorption bands in the UV-visible spectrum depend on the electronic structure of the molecule. In organic molecules, the electrons most likely to be involved in UV-visible absorption are the <span class="arithmatex">\(\pi\)</span> electrons in conjugated systems and the non-bonding lone pair electrons on heteroatoms such as oxygen and nitrogen. As the degree of conjugation in a molecule increases, the energy gap between the ground state and the excited state decreases, and the absorption band shifts to longer wavelengths: a phenomenon known as a bathochromic or red shift. This is why, for example, beta-carotene, which has a long conjugated chain, absorbs strongly in the visible region and appears orange, while simpler molecules with fewer conjugated bonds absorb in the UV and are colorless <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref10">[10]</a>.</p>
+<h3 id="structure-and-operation-of-absorption-spectrometers">Structure and Operation of Absorption Spectrometers</h3>
+<p>A UV-visible absorption spectrophotometer is an instrument designed to measure the absorbance of a sample as a function of wavelength. Despite the many variations in design and complexity that exist, all spectrophotometers share the same fundamental architecture, consisting of five basic components: a light source, a wavelength selector, a sample holder, a detector, and a readout system <a href="../bibliography/#ref1">[1]</a>. The spatial arrangement and theoretical operation of the primary optical components are schematically represented in <strong>Figure 4</strong>, with the readout system typically integrated into a modern computer interface. </p>
+<p><img alt="Spectrometer structure" src="../Figures/spectrometer_structure1.svg" /></p>
+<p><em><strong>Figure 4</strong>: Block diagram of the fundamental components of a single-beam absorption spectrophotometer: a light source, a monochromator for wavelength selection, a sample holder, and a detector.</em></p>
+<p>The light source must emit radiation across the entire wavelength range of interest with sufficient and stable intensity. For UV-visible spectrophotometry, two types of lamps are commonly used in commercial instruments: a deuterium lamp, which provides continuous radiation in the UV region (190–400 nm), and a tungsten-halogen lamp, which covers the visible and near-infrared region (350–900 nm). Many instruments automatically switch between the two lamps as the wavelength scan crosses the boundary between the UV and visible regions. In lower-cost and educational instruments, white LEDs are a popular alternative, as they are inexpensive, energy-efficient, and emit across much of the visible range, though with a non-uniform spectral output <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref1">[4]</a>.</p>
+<p>The wavelength selector is the component responsible for isolating a narrow band of wavelengths from the broadband output of the light source. In modern spectrophotometers, this is almost always achieved using a diffraction grating (a flat optical surface ruled with a large number of closely spaced parallel grooves). When light strikes the grating, it is diffracted at angles that depend on its wavelength according to the grating equation:</p>
+<div class="arithmatex">\[n\lambda=d\sin \theta\]</div>
+<p>where <span class="arithmatex">\(n\)</span> is the diffraction order (typically 1), <span class="arithmatex">\(\lambda\)</span> is the wavelength of the diffracted light, <span class="arithmatex">\(d\)</span> is the spacing between adjacent grooves, and <span class="arithmatex">\(\theta\)</span> is the diffraction angle. By rotating the grating or scanning the detector angle, different wavelengths can be directed onto the sample in sequence, allowing a full spectrum to be recorded. Older instruments used prisms as dispersive elements, but gratings have largely replaced them due to their more linear dispersion and lower cost <a href="../bibliography/#ref1">[1]</a>.</p>
+<p>The sample holder is typically a cuvette — a small transparent container with a precisely defined path length, usually 1 cm. Cuvettes for UV measurements must be made from materials that do not absorb UV radiation, such as quartz or fused silica. For measurements confined to the visible region, less expensive plastic or glass cuvettes are perfectly adequate <a href="../bibliography/#ref1">[1]</a>.</p>
+<p>The detector converts the transmitted light intensity into an electrical signal. The most common detector type in modern instruments is the photodiode, which generates a current proportional to the incident light intensity. In instruments designed to record a full spectrum simultaneously, an array of photodiodes (known as a photodiode array or PDA) can be used, replacing the need to scan through wavelengths mechanically. Photomultiplier tubes (PMTs), which offer much higher sensitivity, are used in high-end research instruments. For educational and low-cost devices, simpler detectors such as light-dependent resistors (LDRs) or phototransistors are also viable options <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref4">[4]</a>.</p>
+<p>Finally, the readout system processes the electrical signal from the detector and presents the result to the user. In modern instruments this is handled entirely by software running on a connected computer, which can display the spectrum, perform baseline corrections, and carry out quantitative calculations automatically. In simpler home-built instruments, the detector signal is often read directly with a digital multimeter and the absorbance calculated by hand or with a simple script <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref8">[8]</a>.</p>
+<p>It is worth noting the distinction between single-beam and double-beam instrument designs. In a single-beam spectrophotometer, the sample and the blank (a reference solution, typically the pure solvent) are measured sequentially, and the ratio of their signals gives the transmittance. In a double-beam instrument, the light is split into two paths (one through the sample and one through the reference) and both are measured simultaneously. The double-beam design is more stable against fluctuations in the light source intensity and is therefore preferred in research-grade instruments, although single-beam designs are perfectly adequate for many educational and routine analytical applications <a href="../bibliography/#ref1">[1]</a><a href="../bibliography/#ref2">[2]</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.sections", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

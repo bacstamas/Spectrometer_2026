@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,67,56"/>
+<area shape="rect" id="Node000001" href="$classui_1_1panel_1_1CreateCenterPanel.html" title="Center panel of the main window, responsible for displaying visualizations such as spectrum plots and..." alt="" coords="115,5,313,31"/>
+<area shape="poly" id="edge9_Node000000_Node000001" title=" " alt="" coords="80,35,125,28,125,33,80,40"/>
+<area shape="rect" id="Node000002" href="$classui_1_1panel_1_1CreateLeftPanel.html" title="Left panel of the main window containing the list of measurements." alt="" coords="124,55,304,80"/>
+<area shape="poly" id="edge10_Node000000_Node000002" title=" " alt="" coords="81,47,124,53,123,58,80,52"/>
+</map>

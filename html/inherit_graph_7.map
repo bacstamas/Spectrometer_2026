@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,70,73,95"/>
+<area shape="rect" id="Node000001" href="$classui_1_1dialog_1_1AbsorptionOptionsDialog.html" title="Dialog for configuring absorption plot options." alt="" coords="121,5,324,45"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="85,66,157,43,159,48,87,71"/>
+<area shape="rect" id="Node000002" href="$classui_1_1dialog_1_1ConfigureDialog.html" title="Dialog for configuring spectrometer measurement parameters." alt="" coords="129,70,316,95"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="87,80,129,80,129,85,87,85"/>
+<area shape="rect" id="Node000003" href="$classui_1_1dialog_1_1SpectrumOptionsDialog.html" title="Dialog for configuring spectrum plot options." alt="" coords="125,120,320,160"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="87,95,159,117,157,122,85,100"/>
+</map>
